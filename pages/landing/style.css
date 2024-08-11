@@ -55,7 +55,6 @@ button.explore {
 button.explore img {
   position: absolute;
   right: 5%;
-  stroke: #ff8e26;
 }
 
 button.explore:hover {
