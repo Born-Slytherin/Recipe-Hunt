@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: url("/assets/background-white.svg");
+  background-size: cover;
+  height: 100vh;
+  font-family: "Poppins";
+}
+section.wrapper {
+  height: 100%;
+  padding: 50px 30px;
+}
+div.landing-image img {
+  width: 750px;
+  position: absolute;
+  top: 7%;
+  right: 2%;
+}
+div.hamburger img {
+  position: absolute;
+  left: 43%;
+  top: 5%;
+}
+div.tagline {
+  position: absolute;
+  top: 17%;
+}
+div.tagline p {
+  text-transform: uppercase;
+  font-size: 12rem;
+  line-height: 80%;
+  font-weight: 900;
+}
+div.tagline p span {
+  color: #ff8e26;
+}
+button.explore {
+  background: inherit;
+  position: absolute;
+  bottom: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ff8e26;
+  border: 5px solid #ff8e26;
+  padding: 5px 30px;
+  font-size: 50px;
+  gap: 10px;
+  border-radius: 10px;
+  width: 500px;
+}
+button.explore img {
+  position: absolute;
+  right: 5%;
+  stroke: #ff8e26;
+}
+
+button.explore:hover {
+  background: #ff8e26;
+  color: #ffffff;
+}
