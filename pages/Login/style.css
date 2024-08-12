@@ -1,0 +1,11 @@
+div.logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+div.burger img {
+    position: absolute;
+    right: 5%;
+    top: 0;
+    height: 800px;
+}
