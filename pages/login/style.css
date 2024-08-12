@@ -1,0 +1,76 @@
+div.logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+div.burger img {
+    position: absolute;
+    right: 5%;
+    top: 5%;
+    height: 750px;
+}
+div.auth {
+    height: 100%;
+}
+
+div.auth form {
+    position: absolute;
+    top: 20%;
+    left:10%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    background: rgba( 255, 255, 255, 0.1 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+div.auth form h3 {
+    color: #ff8e26;
+    font-size: 3rem;
+}
+div.credentials {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+input {
+    background: transparent;
+    padding: 20px;
+    border: none;
+    border-bottom: 5px solid #ff8e26;
+    font-family: "Poppins";
+    color: #fff;
+}
+input::placeholder {
+    font-size: 25px;
+    letter-spacing: 2px;
+}
+div.forgot {
+    display: flex;
+    flex-direction: row-reverse;
+}
+a {
+    text-decoration: none;
+    color: #ff8e26;
+    font-weight: bolder
+}
+button{
+    font-family: "Poppins";
+    width: 100%;
+    padding: 3px;
+    font-size: 32px;
+    font-weight: bolder;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background: #ff8e26;
+}
+.sign-up {
+    color: #999999;
+}
+.sign-up a {
+    color: #ff8e26;
+}
