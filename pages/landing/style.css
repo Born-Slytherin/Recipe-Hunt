@@ -49,12 +49,29 @@ button.explore:hover {
   color: #ffffff;
 }
 
-@keyframes Load {
-  
-  from {
-    transform: translate(0,-100%);
-  } to {
-    transform: translate(0,0);
-  }
+div.line-arrow img {
+  position: absolute;
+  top: 55%;
+  left: 34%;
+  width: 0%;
+  height: auto;
+  animation: width-full 2s forwards;
+}
 
+@keyframes Load {
+  from {
+    transform: translate(0, -100%);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes width-full {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 380px;
+  }
 }

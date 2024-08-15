@@ -1,13 +1,15 @@
+body {
+  overflow-y: hidden;
+}
 div.logo {
-  width: 100%;
   display: flex;
   justify-content: center;
 }
-div.burger img {
+.pizza img {
   position: absolute;
-  right: 5%;
-  top: 5%;
-  height: 750px;
+  left: -20%;
+  top: 0;
+  width: 950px;
 }
 div.auth {
   height: 100%;
@@ -15,26 +17,27 @@ div.auth {
 
 div.auth form {
   position: absolute;
-  top: 20%;
-  left: 10%;
+  top: 15%;
+  right: 10%;
   padding: 30px;
   display: flex;
   flex-direction: column;
-  gap: 50px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
+  gap: 10px;
 }
 div.auth form h3 {
   color: #ff8e26;
   font-size: 3rem;
+  text-align: center;
+  width: 400px;
 }
 div.credentials {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 input {
   background: transparent;
@@ -49,32 +52,6 @@ input {
 input::placeholder {
   font-size: 25px;
   letter-spacing: 2px;
-}
-div.forgot {
-  display: flex;
-  flex-direction: row-reverse;
-}
-a {
-  text-decoration: none;
-  color: #ff8e26;
-  font-weight: bolder;
-}
-button {
-  font-family: "Poppins";
-  width: 100%;
-  padding: 3px;
-  font-size: 32px;
-  font-weight: bolder;
-  border: none;
-  border-radius: 5px;
-  color: #fff;
-  background: #ff8e26;
-}
-.sign-up {
-  color: #999999;
-}
-.sign-up a {
-  color: #ff8e26;
 }
 div.password {
   position: relative;
@@ -98,4 +75,23 @@ div.password input {
   opacity: 0.5;
   z-index: 100;
   cursor: pointer;
+}
+button {
+  font-family: "Poppins";
+  width: 100%;
+  padding: 3px;
+  font-size: 32px;
+  font-weight: bolder;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  background: #ff8e26;
+}
+.sign-in {
+  color: #999999;
+}
+.sign-in a {
+  text-decoration: none;
+  color: #ff8e26;
+  font-weight: bolder;
 }
