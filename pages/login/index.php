@@ -1,3 +1,6 @@
+<?php 
+  require_once("../../components/modal.php")
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
