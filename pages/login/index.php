@@ -53,7 +53,7 @@
           <!-- Sign Up -->
           <span class="sign-up"
             >Don't have an account?
-            <a href="../register/index.html">Sign Up</a></span
+            <a href="../register/index.php">Sign Up</a></span
           >
         </form>
       </div>
