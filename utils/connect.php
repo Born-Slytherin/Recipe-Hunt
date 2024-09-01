@@ -1,27 +1,13 @@
-<?php 
+<?php
 
-    $dbConfig = [
-        'host'     => 'localhost',
-        'username' => 'root',
-        'password' => '',
-        'database' => 'recipe-hunt',
-    ];
+$host = 'localhost';
+$username = 'root';
+$password = '';
 
-    $dbcon = @mysqli_connect($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['database']);
+$conn = new mysqli($host, $username, $password);
 
-    if (!$dbcon) {
-        die("Connection failed: " . mysqli_connect_error());
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-        $createdb_sql = "CREATE DATABASE IF NOT EXISTS " . $dbConfig['database'];
-        $result = mysqli_query($dbcon, $createdb_sql);
-
-        if ($result) {
-            echo "Database created successfully";
-        } else {
-            echo "Error creating database: " . mysqli_error($dbcon);
-        }
-    } else {
-        echo "Connected successfully";
-    }
-    
 ?>
