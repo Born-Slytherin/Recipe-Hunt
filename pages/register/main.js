@@ -1,3 +1,6 @@
+import { showToast } from '../../components/toast.js';
+
+
 const pwdEyeOpen = document.querySelector("#password-eye-open");
 const pwdEyeClosed = document.querySelector("#password-eye-closed");
 const confirmEyeOpen = document.querySelector("#confirm-eye-open");
@@ -43,3 +46,37 @@ confirmPasswordParent.addEventListener("click", (event) => {
     );
   }
 });
+
+document
+  .getElementById("signUpForm")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    const username = formData.get("username");
+    const email = formData.get("email");
+
+
+    const response = await fetch("../../utils/register.php", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      showToast(result.message, "success");
+
+      const userData = {
+        username: username,
+        email: email,
+      };
+      localStorage.setItem("user", JSON.stringify(userData));
+      
+    } else {
+      showToast(result.message, "error");
+    }
+  });
+
+

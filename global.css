@@ -38,15 +38,47 @@ section.wrapper {
   height: 100%;
   padding: 50px 30px;
 }
-div.modal {
-  background: #ff0000;
-  position: absolute;
-  bottom: 2%;
-  right: 2%;
-  width: max-content;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bolder;
+
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
   color: white;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  transform: translateY(20px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+.toast .icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.toast .message {
+  flex-grow: 1;
+  font-size: 14px;
 }

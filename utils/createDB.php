@@ -12,3 +12,5 @@ if ($conn->query($sql) === TRUE) {
 
 // Select the database
 $conn->select_db('recipe-hunt');
+
+?>
