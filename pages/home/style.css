@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #212121;
+    width: 100vw;
+    height: 100vh;
+}
+div.container{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 25% 1fr;
+}
+div.chat_box {
+    border-left: 2px solid white;
+    display: grid;
+    grid-template-rows: 1fr 10%;
+}
+div.output {
+    border-bottom: 2px solid white;
+}
+div.search_btn form {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+div.search_btn form input {
+    width: 100%;
+    background: #2f2f2f;
+    padding: 20px;
+    border: none;
+    border-radius: 30px;
+}
+div.search_btn form input::placeholder {
+    font-size: 20px;
+}
+form {
+    position: relative;
+}
+.plane_btn{
+    background: #676767;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 5px;
+    border-radius: 100%;
+    transform: translateY(-50%);
+}

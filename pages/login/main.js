@@ -31,8 +31,9 @@ loginForm.addEventListener("submit", async function (e) {
 
   if (result.status === "success") {
     showToast(result.message, "success");
+    console.log("Routing...");
+    window.location.href = "../home/index.html";
   } else {
     showToast(result.message, "error");
-
   }
 });
