@@ -12,6 +12,9 @@
 
 <body>
 
+<?php 
+  require_once("../../utils/tables.php")
+?>
 <!-- toast -->
 <div id="toast-container"></div>
 

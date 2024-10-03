@@ -66,10 +66,12 @@ section.wrapper {
 
 .toast.success {
   background-color: #4caf50;
+  font-size: 50px;
 }
 
 .toast.error {
   background-color: #f44336;
+  font-size: 50px;
 }
 
 .toast .icon {
