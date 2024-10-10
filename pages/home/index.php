@@ -6,30 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
   <link rel="stylesheet" href="./style.css" />
-  <script type="importmap">
-  {
-    "imports": {
-      "@google/generative-ai": "https://esm.run/@google/generative-ai"
-    }
-  }
-</script>
+ 
 </head>
 
 <body>
   <div>
     <form method="POST">
-      <button type="submit" name="share">Share Recipe</button>
-      <button type="submit" name="generate">Generate Recipe</button>
+      <button type="submit" name="action" value="share">Share Recipe</button>
+      <button type="submit" name="action" value="generate">Generate Recipe</button>
     </form>
   </div>
   <div class="import-container">
     <?php
+    $action = $_POST['action'] ?? 'generate'; // Default to 'generate'
 
-    if (isset($_POST['share'])) {
-      require("../../components/ShareRecipe.php");
-    }
-    if (isset($_POST['generate'])) {
-      require("../../components/GenerateRecipe.php");
+    switch ($action) {
+      case 'share':
+        require("../../components/ShareRecipe.php");
+        break;
+      case 'generate':
+      default: // Default case for 'generate'
+        require("../../components/GenerateRecipe.php");
+        break;
     }
     ?>
   </div>
