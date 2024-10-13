@@ -189,7 +189,7 @@ div.output {
   }
 
   /* Style the image */
-  & img {
+  /* & img {
     max-width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;
@@ -197,5 +197,5 @@ div.output {
     margin: 10px 0;
     object-fit: contain;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
+  } */
 }
