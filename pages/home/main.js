@@ -68,9 +68,12 @@ form.addEventListener("submit", async (event) => {
 
       // Pollination Image Generation
       const prompt = `image of ${title}`;
-      const PollinationUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
-        prompt
-      )}`;
+      const model = "flux-realism";
+      const seed = -1;
+      const width = 1024;
+      const height = 786;
+      const nologo = true;
+      const PollinationUrl = `https://image.pollinations.ai/prompt/${prompt}?model=${model}&seed=${seed}?width=${width}&height=${height}&nologo=${nologo}`;
 
       const fetchImage = async () => {
         try {
@@ -81,7 +84,7 @@ form.addEventListener("submit", async (event) => {
           if (response.ok) {
             const blob = await response.blob();
             const imageUrl = URL.createObjectURL(blob);
-            return imageUrl; // Return the generated image URL
+            return imageUrl;
           } else {
             console.error("Error fetching the image:", response.statusText);
             return null;

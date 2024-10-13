@@ -191,9 +191,11 @@ div.output {
   /* Style the image */
   & img {
     max-width: 100%;
+    height: auto; /* Allows the height to adjust automatically */
+    aspect-ratio: 16 / 9; /* Maintains the aspect ratio */
     border-radius: 10px;
     margin: 10px 0;
-    object-fit: cover;
+    object-fit: contain; /* Ensures the entire image is visible */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 }
