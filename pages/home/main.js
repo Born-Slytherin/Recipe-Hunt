@@ -1,4 +1,5 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const geminiApiKey = "AIzaSyDt5P5wU_GCCllAGLbLVBoz6kTbPHpwDMk";
+const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
 
 let form = document.querySelector(".ingredients-form");
 let output = document.querySelector(".output");
@@ -11,64 +12,134 @@ form.addEventListener("submit", async (event) => {
   let servings = document.getElementById("servings-select").value;
   let meal = document.getElementById("meal").value;
 
-  const genAI = new GoogleGenerativeAI(
-    "AIzaSyDBkKGJd2N_beeIiLz761lTR83znW_mQgk"
-  );
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const prompt = `Generate a recipe for ${meal} using only the ingredients ${ingredients}. Cuisine: ${cuisine}. Servings: ${servings}. It should contain title, ingredients, steps, and tips. Return in JSON. No code blocks`;
-
-  console.log(prompt);
-
-  const result = await model.generateContent(prompt);
-
   try {
-    let recipe = JSON.parse(result.response.text());
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            {
+              text: `Generate a recipe for ${meal} using only the ingredients ${ingredients}. Cuisine: ${cuisine}. Servings: ${servings}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        response_mime_type: "application/json",
+        response_schema: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            ingredients: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  quantity: { type: "string" },
+                  name: { type: "string" },
+                },
+                required: ["quantity", "name"],
+              },
+            },
+            steps: {
+              type: "array",
+              items: { type: "string" },
+            },
+            tips: {
+              type: "array",
+              items: { type: "string" },
+            },
+          },
+          required: ["title", "ingredients", "steps"],
+        },
+      },
+    };
 
-    output.innerHTML = "";
-
-    // Create and append the recipe title
-    const title = document.createElement("h2");
-    title.textContent = recipe.title;
-    output.appendChild(title);
-
-    // Create and append the ingredients list
-    const ingredientsList = document.createElement("h3");
-    ingredientsList.textContent = "Ingredients";
-    output.appendChild(ingredientsList);
-    const ingredientsUl = document.createElement("ul");
-    recipe.ingredients.forEach((ingredient) => {
-      const li = document.createElement("li");
-      li.textContent = ingredient;
-      ingredientsUl.appendChild(li);
+    const response = await fetch(geminiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
     });
-    output.appendChild(ingredientsUl);
 
-    // Create and append the steps
-    const stepsList = document.createElement("h3");
-    stepsList.textContent = "Steps";
-    output.appendChild(stepsList);
-    const stepsOl = document.createElement("ol");
-    recipe.steps.forEach((step) => {
-      const li = document.createElement("li");
-      li.textContent = step;
-      stepsOl.appendChild(li);
-    });
-    output.appendChild(stepsOl);
+    if (response.ok) {
+      const data = await response.json();
+      const recipeData = JSON.parse(data.candidates[0].content.parts[0].text);
 
-    // Create and append the tips
-    const tipsList = document.createElement("h3");
-    tipsList.textContent = "Tips";
-    output.appendChild(tipsList);
-    const tipsUl = document.createElement("ul");
-    recipe.tips.forEach((tip) => {
-      const li = document.createElement("li");
-      li.textContent = tip;
-      tipsUl.appendChild(li);
-    });
-    output.appendChild(tipsUl);
+      const { title, ingredients, steps, tips } = recipeData;
+
+      // Pollination Image Generation
+      const prompt = `image of ${title}`;
+      const PollinationUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+        prompt
+      )}`;
+
+      const fetchImage = async () => {
+        try {
+          const response = await fetch(PollinationUrl, {
+            method: "GET",
+            headers: { "Content-Type": "image/png" },
+          });
+          if (response.ok) {
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            return imageUrl; // Return the generated image URL
+          } else {
+            console.error("Error fetching the image:", response.statusText);
+            return null;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          return null;
+        }
+      };
+
+      const imageUrl = await fetchImage();
+
+      output.innerHTML = `
+      <h2>${title}</h2>
+      ${
+        imageUrl
+          ? `<img src="${imageUrl}" alt="${title} image" />`
+          : "<p>No image available</p>"
+      }
+      <h3>Ingredients:</h3>
+      <ul>${ingredients
+        .map((item) => `<li>${item.quantity} ${item.name}</li>`)
+        .join("")}</ul>
+      <h3>Steps:</h3>
+      <ol>${steps.map((step) => `<li>${step}</li>`).join("")}</ol>
+      ${
+        tips && tips.length
+          ? `<h3>Tips:</h3><ul>${tips
+              .map((tip) => `<li>${tip}</li>`)
+              .join("")}</ul>`
+          : ""
+      }
+    `;
+
+      // Sending the recipe data to the PHP backend
+      const result = await fetch("../../utils/insertRecipe.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          steps,
+          tips,
+          ingredients,
+          cuisine,
+          meal,
+          servings,
+        }),
+      });
+
+      const resultData = await result.json();
+      console.log(resultData.message);
+    } else {
+      output.textContent = "Error: Failed to fetch recipe.";
+      console.log("Error Status:", response.status);
+    }
   } catch (error) {
-    console.error("Error parsing recipe:", error);
-    output.textContent = "Failed to generate a recipe. Please try again.";
+    console.error("Fetch Error:", error);
+    output.textContent =
+      "Error: An error occurred while generating the recipe.";
   }
 });

@@ -13,7 +13,11 @@
 <body>
 
 <?php 
-  require_once("../../utils/tables.php")
+  require_once("../../utils/tables.php");
+
+  if(isset($_COOKIE["user"])){
+    header("Location: ../home/index.php");
+}
 ?>
 <!-- toast -->
 <div id="toast-container"></div>

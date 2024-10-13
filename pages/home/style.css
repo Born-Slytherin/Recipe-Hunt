@@ -111,7 +111,6 @@ div.chat_box {
   height: 98vh;
   grid-template-rows: 1fr 100px;
   box-sizing: border-box;
- 
 }
 
 div.search_btn {
@@ -148,14 +147,13 @@ form {
   padding: 5px;
   border-radius: 100%;
   transform: translateY(-50%);
-  cursor : pointer;
+  cursor: pointer;
 }
 .plane_btn:hover {
   background: #000;
 }
-
 div.output {
-  padding:1rem 20px 20px 20px;
+  padding: 1rem 20px 20px 20px;
   font-size: 15px;
   color: white;
   display: grid;
@@ -189,5 +187,13 @@ div.output {
   & ul {
     list-style-type: disc;
   }
-}
 
+  /* Style the image */
+  & img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin: 10px 0;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}

@@ -6,8 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
   <link rel="stylesheet" href="./style.css" />
- 
 </head>
+
+<?php 
+  if(!isset($_COOKIE["user"])){
+    header("Location: /Recipe-Hunt/pages/login/index.php");
+    exit;
+  }
+?>
 
 <body>
   <div>
@@ -18,7 +24,7 @@
   </div>
   <div class="import-container">
     <?php
-    $action = $_POST['action'] ?? 'generate'; // Default to 'generate'
+    $action = $_POST['action'] ?? 'generate';
 
     switch ($action) {
       case 'share':

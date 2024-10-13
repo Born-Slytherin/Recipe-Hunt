@@ -34,6 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "INSERT INTO users (username, fullname, email, password) VALUES ('$username', '$fullname', '$email', '$hashedPassword')";
         
         if (mysqli_query($conn, $sql)) {
+            if(!isset($_COOKIE["user"])){
+                setcookie("user", $username, time() + (86400 * 7), "/");
+            }
             echo json_encode(["status" => "success", "message" => "Registration successful."]);
         } else {
             echo json_encode(["status" => "error", "message" => "Error: " . mysqli_error($conn)]);

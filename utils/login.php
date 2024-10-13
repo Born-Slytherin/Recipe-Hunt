@@ -17,6 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashedPassword = $user['password']; 
         
         if (password_verify($password, $hashedPassword)) {
+            if(!isset($_COOKIE["user"])){
+                setcookie("user", $username, time() + (86400 * 7), "/"); // 86400 = 1 day
+            }
             echo json_encode(["status" => "success", "message" => "Login Successful"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Invalid username or password"]);
