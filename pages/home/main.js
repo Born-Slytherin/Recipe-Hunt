@@ -67,44 +67,39 @@ form.addEventListener("submit", async (event) => {
       const { title, ingredients, steps, tips } = recipeData;
 
       // Pollination Image Generation
-      // const prompt = `image of ${title}`;
-      // const model = "flux-realism";
-      // const seed = 0;
-      // const width = 1024;
-      // const height = 786;
-      // const nologo = true;
-      // const PollinationUrl = `https://image.pollinations.ai/prompt/${prompt}?model=${model}&seed=${seed}?width=${width}&height=${height}&nologo=${nologo}`;
+      const prompt = `${title}`;
+      const noLogo = "true"
+      const PollinationUrl = `https://image.pollinations.ai/prompt/${prompt}?nologo=${noLogo}`;
 
-      // const fetchImage = async () => {
-      //   try {
-      //     const response = await fetch(PollinationUrl, {
-      //       method: "GET",
-      //       headers: { "Content-Type": "image/png" },
-      //     });
-      //     if (response.ok) {
-      //       const blob = await response.blob();
-      //       const imageUrl = URL.createObjectURL(blob);
-      //       return imageUrl;
-      //     } else {
-      //       console.error("Error fetching the image:", response.statusText);
-      //       return null;
-      //     }
-      //   } catch (error) {
-      //     console.error("Error:", error);
-      //     return null;
-      //   }
-      // };
+      const fetchImage = async () => {
+        try {
+          const response = await fetch(PollinationUrl, {
+            method: "GET",
+            headers: { "Content-Type": "image/png" },
+          });
+          if (response.ok) {
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            return imageUrl;
+          } else {
+            console.error("Error fetching the image:", response.statusText);
+            return null;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          return null;
+        }
+      };
 
-      // const imageUrl = await fetchImage();
-
-      // ${
-      //   imageUrl
-      //     ? `<img src="${imageUrl}" alt="${title} image" />`
-      //     : "<p>No image available</p>"
-      // }
-
+      const imageUrl = await fetchImage();
+      
       output.innerHTML = `
       <h2>${title}</h2>
+      ${
+        imageUrl
+          ? `<img src="${imageUrl}" alt="${title} image" />`
+          : "<p>No image available</p>"
+      }
       <h3>Ingredients:</h3>
       <ul>${ingredients
         .map((item) => `<li>${item.quantity} ${item.name}</li>`)
