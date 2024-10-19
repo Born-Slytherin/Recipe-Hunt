@@ -3,20 +3,20 @@
         <div>
             <label for="cuisine">Cuisine</label>
             <select name="cuisine" id="cuisine">
-                <option value="">Select Cuisine</option>
                 <?php
                 $cuisines = ["Indian", "Italian", "Chinese", "Mexican", "American"];
                 foreach ($cuisines as $cuisine) {
-                    echo "<option value='" . $cuisine . "'>" . $cuisine . "</option>";
+                    $selected = ($cuisine === "Indian") ? "selected" : "";
+                    echo "<option value='" . $cuisine . "' $selected>" . $cuisine . "</option>";
                 }
                 ?>
+
             </select>
         </div>
         <div>
             <label for="meal">Select Meal</label>
             <select name="meal" id="meal">
-                <option value="">Select Meal</option>
-                <option value="breakfast">Breakfast</option>
+                <option value="breakfast" selected>Breakfast</option>
                 <option value="lunch">Lunch</option>
                 <option value="dinner">Dinner</option>
                 <option value="dessert">Dessert</option>
@@ -25,8 +25,7 @@
         <div>
             <label for="servings-select">Servings</label>
             <select name="servings" id="servings-select">
-                <option value="">Select Servings</option>
-                <option value="1">1 Serving</option>
+                <option value="1" selected>1 Serving</option>
                 <option value="2">2 Servings</option>
                 <option value="3">3 Servings</option>
                 <option value="4">4 Servings</option>
