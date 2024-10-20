@@ -26,9 +26,9 @@
   background: #555;
 }
 
-body {
+body#home {
   overflow: hidden;
-  background: #ff8e26;
+  background: #ff8e26 ;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -197,5 +197,25 @@ div.output {
     margin: 10px 0;
     object-fit: contain;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Share recipe  */
+
+.addBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #ff8e26;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  border: none;
+  display: grid;
+  place-items: center;
+
+  & img {
+    width: 75%;
+    aspect-ratio: 1;
   }
 }

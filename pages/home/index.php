@@ -6,16 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
   <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="../../global.css">
 </head>
 
-<?php 
-  if(!isset($_COOKIE["user"])){
-    header("Location: /Recipe-Hunt/pages/login/index.php");
-    exit;
-  }
+<?php
+if (!isset($_COOKIE["user"])) {
+  header("Location: /Recipe-Hunt/pages/login/index.php");
+  exit;
+}
+
+require("../../components/modal.php");
 ?>
 
-<body>
+<body id="home">
   <div>
     <form method="POST">
       <button type="submit" name="action" value="share">Share Recipe</button>
@@ -31,13 +34,14 @@
         require("../../components/ShareRecipe.php");
         break;
       case 'generate':
-      default: // Default case for 'generate'
+      default:
         require("../../components/GenerateRecipe.php");
         break;
     }
     ?>
   </div>
-  <script src="./main.js" type="module" defer></script>
+  <script src="./recipeGeneration.js" type="module" defer></script>
+  <script src="./recipeSharing.js" type="module" defer></script>
 </body>
 
 </html>

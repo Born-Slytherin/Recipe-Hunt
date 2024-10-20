@@ -39,6 +39,7 @@ section.wrapper {
   padding: 50px 30px;
 }
 
+/* Toast */
 #toast-container {
   position: fixed;
   bottom: 20px;
@@ -85,6 +86,8 @@ section.wrapper {
   font-size: 14px;
 }
 
+
+/* Scroll bar */
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -105,4 +108,15 @@ section.wrapper {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Modal */
+div.modal {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 1000;
+  background: #000;
+  display: none;
+  color: white;
 }

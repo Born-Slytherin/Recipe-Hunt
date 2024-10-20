@@ -1,5 +1,5 @@
 export default async function isRecipeOrIngredient(item, geminUrl) {
-  let isRecipePrompt = `Check if ${item} is a "Complete Food" , "Ingredients" or "Non-Food Items" and return the strings "Complete Food" , "Ingredient" or "Non-Food Items". Return true if "Complete Food" or "Ingredients".Return false if "Non-Food Items"`;
+  let isRecipePrompt = `Check if ${item} is a "Complete Food" , "Ingredients" or "Non-Food Items". Return message as strings "Complete Food" , "Ingredient" or "Non-Food Items". Return true if "Complete Food" or "Ingredients".Return false if "Non-Food Items"`;
   console.log(isRecipePrompt);
 
   try {
