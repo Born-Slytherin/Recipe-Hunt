@@ -50,7 +50,7 @@ form {
   align-items: center;
 }
 
-form button {
+form button#shareRecipe , button#generateRecipe {
   all: unset;
   padding: 10px;
   border-radius: 50px;

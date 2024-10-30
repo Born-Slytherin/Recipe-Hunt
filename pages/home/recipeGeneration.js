@@ -5,6 +5,8 @@ const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemin
 
 let form = document.querySelector(".ingredients-form");
 let output = document.querySelector(".output");
+output.innerHTML =
+  "<p>Please enter ingredients and submit to generate a recipe.</p>";
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -13,22 +15,17 @@ form.addEventListener("submit", async (event) => {
   let cuisine = document.getElementById("cuisine").value.trim();
   let servings = document.getElementById("servings-select").value.trim();
   let meal = document.getElementById("meal").value.trim();
-  let prompt = '';
+  let prompt = "";
 
   let isRecipe = await isRecipeOrIngredient(ingredients, geminiUrl);
   console.log("isRecipe:", isRecipe);
 
   if (isRecipe.success) {
-    
-    if(isRecipe.message === "Complete Food"){
-
-      prompt = `Generate a recipe for a complete ${meal} named "${ingredients}". Cuisine: ${cuisine}. Servings: ${servings}. Include ingredients, steps, and optional tips. Ensure the recipe is suitable for the given cuisine.`
-
+    if (isRecipe.message === "Complete Food") {
+      prompt = `Generate a recipe for a complete ${meal} named "${ingredients}". Cuisine: ${cuisine}. Servings: ${servings}. Include ingredients, steps, and optional tips. Ensure the recipe is suitable for the given cuisine.`;
     }
-    if(isRecipe.message === "Ingredients"){
-
-      prompt = `Generate a recipe for a ${meal} using only the ingredients "${ingredients}". Cuisine: ${cuisine}. Servings: ${servings}. Include steps, optional tips, and ensure the recipe is suitable for the given cuisine.`
-
+    if (isRecipe.message === "Ingredients") {
+      prompt = `Generate a recipe for a ${meal} using only the ingredients "${ingredients}". Cuisine: ${cuisine}. Servings: ${servings}. Include steps, optional tips, and ensure the recipe is suitable for the given cuisine.`;
     }
 
     try {
@@ -161,9 +158,9 @@ form.addEventListener("submit", async (event) => {
       output.textContent =
         "Error: An error occurred while generating the recipe.";
     }
-
   } else {
-    output.textContent = "Error: Please provide valid food items as ingredients.";
+    output.textContent =
+      "Error: Please provide valid food items as ingredients.";
     return;
   }
 });

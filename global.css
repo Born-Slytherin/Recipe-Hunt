@@ -86,7 +86,6 @@ section.wrapper {
   font-size: 14px;
 }
 
-
 /* Scroll bar */
 /* width */
 ::-webkit-scrollbar {
@@ -110,13 +109,3 @@ section.wrapper {
   background: #555;
 }
 
-/* Modal */
-div.modal {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  z-index: 1000;
-  background: #000;
-  display: none;
-  color: white;
-}
