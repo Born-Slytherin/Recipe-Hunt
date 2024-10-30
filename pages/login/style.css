@@ -13,7 +13,7 @@ div.auth {
   height: 100%;
 }
 
-div.auth form {
+div.auth form#loginForm {
   position: absolute;
   top: 20%;
   left: 10%;
@@ -27,7 +27,7 @@ div.auth form {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
-div.auth form h3 {
+div.auth form#loginForm h3 {
   color: #ff8e26;
   font-size: 3rem;
 }

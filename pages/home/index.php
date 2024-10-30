@@ -20,9 +20,9 @@ require("../../components/modal.php");
 
 <body id="home">
   <div>
-    <form method="POST">
-      <button type="submit" name="action" value="share" id="shareRecipe">Share Recipe</button>
-      <button type="submit" name="action" value="generate" id="generateRecipe">Generate Recipe</button>
+    <form method="POST" class="GenerateOrShareForm">
+      <button type="submit" name="action" value="share" class="shareRecipe">Share Recipe</button>
+      <button type="submit" name="action" value="generate" class="generateRecipe">Generate Recipe</button>
     </form>
   </div>
   <div class="import-container">

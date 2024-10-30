@@ -1,16 +1,14 @@
 <div class="modal">
-
-    <form method="post">
-
+    <form method="post" class="addRecipeForm">
         <div class="addRecipeContainer">
             <!-- Thumbnail Image -->
             <div class="image">
                 <label for="thumbnail">
-                    <input type="file" name="thumbnail" id="thumbnail" hidden>
-
+                    <input type="file" name="thumbnail" id="thumbnail" hidden onchange="previewImage(event)">
                     <img src="../../assets/home/camera.svg" alt="">
                     <span>Upload an image</span>
                 </label>
+                <img id="preview" src="" alt="Preview" hidden />
             </div>
 
             <div class="formContainer">
@@ -24,7 +22,6 @@
                             <?php
                             $cuisines = ["Indian", "Italian", "Chinese", "Mexican", "American"];
                             foreach ($cuisines as $cuisine) {
-                                // Check if the cuisine is "Indian" to set it as selected
                                 $selected = ($cuisine === "Indian") ? "selected" : "";
                                 echo "<option value='$cuisine' $selected>$cuisine</option>";
                             }
@@ -60,12 +57,9 @@
                 require("TipsInput.php");
                 ?>
 
+                <button type="submit" class="add-recipe">Add Recipe</button>
             </div>
         </div>
-
-        <button type="submit" name="add-recipe">
-            Add Recipe
-        </button>
     </form>
 </div>
 
@@ -81,8 +75,11 @@
         color: white;
         place-items: center;
 
-        & form {
-            position: relative;
+        & button {
+            border: none;
+        }
+
+        & form.addRecipeForm {
             width: 50%;
             height: 75%;
             border-radius: 20px;
@@ -99,20 +96,33 @@
                     height: 250px;
                     background: #676767;
                     border-radius: 10px 10px 0 0;
+                    position: relative;
 
                     & label {
                         width: 100%;
                         height: 100%;
                         display: flex;
                         flex-direction: column;
+                        gap: 5px;
                         justify-content: center;
                         align-items: center;
                         font-size: 12px;
 
                         & img {
-                            width: 120px;
+                            width: 50px;
                             aspect-ratio: 1;
                         }
+                    }
+
+                    & img#preview {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 10px 10px 0 0;
+                        display: none; /* Initially hidden */
                     }
                 }
 
@@ -164,15 +174,36 @@
                         }
                     }
                 }
-            }
 
-            & button.add-recipe {
-                width: 100%;
-                padding: 20px;
-                background: green;
-                position: fixed;
-                bottom: 0;
+                & button.add-recipe {
+                    margin: 10px 0;
+                    background: #ff8e26;
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 0 0 10px 10px;
+                    color: white;
+                    font-size: 20px;
+                    font-weight: bold;
+                }
             }
         }
     }
 </style>
+
+<script>
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // Show the preview image
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

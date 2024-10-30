@@ -15,7 +15,7 @@ div.auth {
   height: 100%;
 }
 
-div.auth form {
+div.auth form#signUpForm {
   position: absolute;
   top: 15%;
   right: 10%;
@@ -29,7 +29,7 @@ div.auth form {
   border: 1px solid rgba(255, 255, 255, 0.18);
   gap: 10px;
 }
-div.auth form h3 {
+div.auth form#signUpForm h3 {
   color: #ff8e26;
   font-size: 3rem;
   text-align: center;

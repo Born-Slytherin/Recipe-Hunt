@@ -54,7 +54,6 @@
             }
 
             .remove-step {
-                rotate: 90deg;
                 background-color: #ff4c4c;
                 color: #ffffff;
             }

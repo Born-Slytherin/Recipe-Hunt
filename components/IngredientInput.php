@@ -53,7 +53,6 @@
             }
 
             button.remove-ingredient {
-                rotate: 90deg;
                 width: 100%;
                 height: 100%;
                 aspect-ratio: 1;
