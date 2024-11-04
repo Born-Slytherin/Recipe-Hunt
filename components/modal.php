@@ -1,6 +1,7 @@
 <div class="modal">
 
-    <form method="post">
+    <form method="post"
+    +>
 
         <!-- Thumbnail Image -->
         <div class="image">

@@ -116,7 +116,16 @@ div.modal {
   height: 100vh;
   position: absolute;
   z-index: 1000;
-  background: #000;
+  background: #0000007e;
   display: none;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal form {
+  background: #676767;
+  border-radius: 10px;
+  width: 50%;
+  height: 50%;
 }
