@@ -18,26 +18,43 @@ if (!$recipeData) {
     exit;
 }
 
-$title = mysqli_real_escape_string($conn, $recipeData['title']);
-$steps = mysqli_real_escape_string($conn, implode(" | ", $recipeData['steps']));
-$tips = isset($recipeData['tips']) ? mysqli_real_escape_string($conn, implode(" | ", $recipeData['tips'])) : null;
-$cuisine = mysqli_real_escape_string($conn, $recipeData['cuisine']);
-$meal = mysqli_real_escape_string($conn, $recipeData['meal']);
+$title = $recipeData['title'];
+$cuisine = $recipeData['cuisine'];
+$meal = $recipeData['meal'];
 $servings = (int)$recipeData['servings'];
-$image = $recipeData['image'] ? mysqli_real_escape_string($conn, $recipeData['image']) : null;
+$image = isset($recipeData['image']) ? $recipeData['image'] : null;
 
 // Prepare and execute insert recipe query
-$insertRecipeQuery = "INSERT INTO `recipes` (`title`, `steps`, `tips`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`) 
-                      VALUES ('$title', '$steps', ".($tips ? "'$tips'" : "NULL").", '$cuisine', '$meal', $servings, ".($image ? "'$image'" : "NULL").", $userId)";
+$insertRecipeQuery = "INSERT INTO `recipes` (`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`,`isGenerated`) 
+                      VALUES ('$title', '$cuisine', '$meal', $servings, ".($image ? "'$image'" : "NULL").", $userId , true)";
 
 if (mysqli_query($conn, $insertRecipeQuery)) {
     $recipeId = mysqli_insert_id($conn);
 
-    foreach ($recipeData['ingredients'] as $ingredient) {
-        $ingredientName = mysqli_real_escape_string($conn, $ingredient['name']);
-        $quantity = mysqli_real_escape_string($conn, $ingredient['quantity']);
+    // Insert steps into the recipe_steps table
+    foreach ($recipeData['steps'] as $index => $step) {
+        $step = $step;
+        $insertStepQuery = "INSERT INTO `recipe_steps` (`recipe_id`, `step_order`, `description`) 
+                            VALUES ($recipeId, ".($index + 1).", '$step')";
+        mysqli_query($conn, $insertStepQuery);
+    }
 
-        // Insert ingredients and link to recipe
+    // Insert tips into the recipe_tips table
+    if (isset($recipeData['tips']) && is_array($recipeData['tips'])) {
+        foreach ($recipeData['tips'] as $tip) {
+            $tip = $tip;
+            $insertTipQuery = "INSERT INTO `recipe_tips` (`recipe_id`, `tip`) 
+                               VALUES ($recipeId, '$tip')";
+            mysqli_query($conn, $insertTipQuery);
+        }
+    }
+
+    // Insert ingredients and link to recipe
+    foreach ($recipeData['ingredients'] as $ingredient) {
+        $ingredientName = $ingredient['name'];
+        $quantity = $ingredient['quantity'];
+
+        // Insert ingredient and link to recipe
         $insertIngredientQuery = "INSERT INTO `ingredients` (`name`) 
                                   VALUES ('$ingredientName') 
                                   ON DUPLICATE KEY UPDATE `id`=LAST_INSERT_ID(`id`)";

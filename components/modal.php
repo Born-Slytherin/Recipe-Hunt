@@ -122,7 +122,8 @@
                         height: 100%;
                         object-fit: cover;
                         border-radius: 10px 10px 0 0;
-                        display: none; /* Initially hidden */
+                        display: none;
+                        /* Initially hidden */
                     }
                 }
 
@@ -200,7 +201,7 @@
 
             reader.onload = function(e) {
                 preview.src = e.target.result;
-                preview.style.display = 'block'; // Show the preview image
+                preview.style.display = 'block';
             };
 
             reader.readAsDataURL(input.files[0]);
