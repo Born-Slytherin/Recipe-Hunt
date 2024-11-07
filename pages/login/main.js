@@ -3,6 +3,7 @@ import { showToast } from '../../components/toast.js';
 let eye_open = document.querySelector(".eye-open");
 let eye_closed = document.querySelector(".eye-closed");
 let pwd = document.querySelector("#pwd");
+
 eye_open.addEventListener("click", function () {
   pwd.type = "password";
   eye_closed.style.display = "none";
@@ -32,7 +33,7 @@ loginForm.addEventListener("submit", async function (e) {
   if (result.status === "success") {
     showToast(result.message, "success");
     console.log("Routing...");
-    window.location.href = "../home/index.php";
+    window.location.href = result.redirect;
   } else {
     showToast(result.message, "error");
   }
