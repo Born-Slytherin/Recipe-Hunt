@@ -18,12 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ingredients = $_POST['ingredient'] ?? [];
     $quantities = $_POST['quantity'] ?? [];
 
-    // Handle Image Upload
-    $image_url = null;  // Initialize image_url
+    // Handle Image Upload as BLOB
+    $image_data = null;  // Initialize image_data
 
     if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK) {
         
-        $upload_dir = "../uploads/"; // Specify the directory to store the image
         $image_tmp_name = $_FILES['thumbnail']['tmp_name'];
         $image_name = basename($_FILES['thumbnail']['name']);
         $image_ext = strtolower(pathinfo($image_name, PATHINFO_EXTENSION));
@@ -31,15 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Ensure only image files are uploaded
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($image_ext, $allowed_extensions)) {
-            $image_path = $upload_dir . uniqid() . '.' . $image_ext;
+            // Read the image file as binary data
+            $image_data = file_get_contents($image_tmp_name);
 
-            // Move the uploaded file to the desired location
-            if (move_uploaded_file($image_tmp_name, $image_path)) {
-                $image_url = $image_path; // Store the image path to the database
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Error uploading image']);
+            if ($image_data === false) {
+                echo json_encode(['success' => false, 'message' => 'Error reading image file']);
                 exit;
             }
+
+            // Debugging: Check if image data is being read properly
+            // echo json_encode(['success' => true, 'message' => 'Image data read successfully']);
+            // exit;
         } else {
             echo json_encode(['success' => false, 'message' => 'Invalid image file type']);
             exit;
@@ -60,13 +61,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->begin_transaction();
 
     try {
-        // Insert the recipe along with the created_by field and image_url
+        // Insert the recipe along with the created_by field and image_url as BLOB
         $query = "INSERT INTO recipes (title, cuisine, meal, servings, image_url, created_by) 
-                  VALUES ('$title', '$cuisine', '$meal', $servings, '$image_url', $user_id)";
-        if (!mysqli_query($conn, $query)) {
-            throw new Exception('Error inserting recipe: ' . mysqli_error($conn));
+                  VALUES ('$title', '$cuisine', '$meal', $servings, ?, $user_id)";
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
+
+        // Debugging: Check if the prepared statement is ready
+        // echo json_encode(['success' => true, 'message' => 'Prepared statement is ready']);
+        // exit;
+
+        $stmt->bind_param("b", $image_data);  // "b" for BLOB
+
+        if (!$stmt->execute()) {
+            throw new Exception('Error inserting recipe: ' . $stmt->error);
         }
         $recipe_id = $conn->insert_id;
+
+        // Debugging: Check if recipe was inserted successfully
+        // echo json_encode(['success' => true, 'message' => 'Recipe inserted with ID: ' . $recipe_id]);
+        // exit;
 
         // Insert steps
         foreach ($steps as $order => $description) {
