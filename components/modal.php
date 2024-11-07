@@ -1,5 +1,5 @@
 <div class="modal">
-    <form method="post" class="addRecipeForm">
+    <form method="post" class="addRecipeForm" id="addRecipeForm" enctype="multipart/form-data" >
         <div class="addRecipeContainer">
             <!-- Thumbnail Image -->
             <div class="image">
@@ -8,7 +8,7 @@
                     <img src="../../assets/home/camera.svg" alt="">
                     <span>Upload an image</span>
                 </label>
-                <img id="preview" src="" alt="Preview" hidden />
+                <img id="preview" name="image" src="" alt="Preview" hidden onclick="document.getElementById('thumbnail').click()" />
             </div>
 
             <div class="formContainer">

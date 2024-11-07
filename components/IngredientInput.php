@@ -1,8 +1,8 @@
 <div class="ingredientInput">
     <label>Ingredients:</label>
     <div class="ingredient-input-group">
-        <input type="text" name="ingredient" placeholder="Ingredient">
-        <input type="text" name="quantity" placeholder="Quantity">
+        <input type="text" name="ingredient[]" placeholder="Ingredient">
+        <input type="text" name="quantity[]" placeholder="Quantity">
         <button type="button" class="add-ingredient">+</button>
     </div>
 </div>
@@ -23,7 +23,7 @@
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr 40px 40px;
-            /* Two inputs and one button */
+
             place-content: center;
             gap: 10px;
 
@@ -78,12 +78,12 @@
 
         const ingredientInput = document.createElement('input');
         ingredientInput.type = 'text';
-        ingredientInput.name = 'ingredient';
+        ingredientInput.name = 'ingredient[]';
         ingredientInput.placeholder = 'Ingredient';
 
         const quantityInput = document.createElement('input');
         quantityInput.type = 'text';
-        quantityInput.name = 'quantity';
+        quantityInput.name = 'quantity[]';
         quantityInput.placeholder = 'Quantity';
 
         const addButton = document.createElement('button');
@@ -103,13 +103,11 @@
 
         document.querySelector('.ingredientInput').appendChild(newInputGroup);
 
-        // Update all add buttons to only trigger for the last button
         updateAddButtonListeners();
 
-        // Add event listener for the remove button
         removeButton.addEventListener('click', () => {
-            newInputGroup.remove(); // Remove the ingredient input group
-            updateAddButtonListeners(); // Update listeners after removal
+            newInputGroup.remove();
+            updateAddButtonListeners();
         });
     }
 
@@ -117,13 +115,12 @@
         const addButtons = document.querySelectorAll('.add-ingredient');
 
         addButtons.forEach((button, index) => {
-            button.removeEventListener('click', addNewInputGroup); // Remove any previous event listeners
-            if (index === addButtons.length - 1) { // Add listener only to the last button
+            button.removeEventListener('click', addNewInputGroup);
+            if (index === addButtons.length - 1) {
                 button.addEventListener('click', addNewInputGroup);
             }
         });
     }
 
-    // Initialize the first add button with the event listener
     updateAddButtonListeners();
 </script>
