@@ -18,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ingredients = $_POST['ingredient'] ?? [];
     $quantities = $_POST['quantity'] ?? [];
 
-    // Handle Image Upload as BLOB
-    $image_data = null;  // Initialize image_data
+    // Handle Image Upload as Data URL
+    $image_data_url = null;
 
     if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK) {
-        
+
         $image_tmp_name = $_FILES['thumbnail']['tmp_name'];
         $image_name = basename($_FILES['thumbnail']['name']);
         $image_ext = strtolower(pathinfo($image_name, PATHINFO_EXTENSION));
@@ -30,17 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Ensure only image files are uploaded
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($image_ext, $allowed_extensions)) {
-            // Read the image file as binary data
+            // Read the image file and convert to base64
             $image_data = file_get_contents($image_tmp_name);
+            $base64_image = base64_encode($image_data);
 
-            if ($image_data === false) {
-                echo json_encode(['success' => false, 'message' => 'Error reading image file']);
-                exit;
-            }
-
-            // Debugging: Check if image data is being read properly
-            // echo json_encode(['success' => true, 'message' => 'Image data read successfully']);
-            // exit;
+            // Prepend Data URL prefix with MIME type
+            $mime_type = mime_content_type($image_tmp_name);
+            $image_data_url = "data:$mime_type;base64,$base64_image";
         } else {
             echo json_encode(['success' => false, 'message' => 'Invalid image file type']);
             exit;
@@ -52,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = mysqli_query($conn, $query);
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        $user_id = $user['id'];  // Get the user_id
+        $user_id = $user['id'];
     } else {
         echo json_encode(['success' => false, 'message' => 'User not found']);
         exit;
@@ -61,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->begin_transaction();
 
     try {
-        // Insert the recipe along with the created_by field and image_url as BLOB
+        // Insert the recipe along with the created_by field and image_url as Data URL
         $query = "INSERT INTO recipes (title, cuisine, meal, servings, image_url, created_by) 
                   VALUES ('$title', '$cuisine', '$meal', $servings, ?, $user_id)";
         $stmt = $conn->prepare($query);
@@ -69,20 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Prepare failed: ' . $conn->error);
         }
 
-        // Debugging: Check if the prepared statement is ready
-        // echo json_encode(['success' => true, 'message' => 'Prepared statement is ready']);
-        // exit;
-
-        $stmt->bind_param("b", $image_data);  // "b" for BLOB
+        $stmt->bind_param("s", $image_data_url);
 
         if (!$stmt->execute()) {
             throw new Exception('Error inserting recipe: ' . $stmt->error);
         }
         $recipe_id = $conn->insert_id;
-
-        // Debugging: Check if recipe was inserted successfully
-        // echo json_encode(['success' => true, 'message' => 'Recipe inserted with ID: ' . $recipe_id]);
-        // exit;
 
         // Insert steps
         foreach ($steps as $order => $description) {
@@ -131,5 +119,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
 }
-
-?>

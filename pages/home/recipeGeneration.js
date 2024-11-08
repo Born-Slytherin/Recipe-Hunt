@@ -94,10 +94,17 @@ form.addEventListener("submit", async (event) => {
               method: "GET",
               headers: { "Content-Type": "image/png" },
             });
+
             if (response.ok) {
               const blob = await response.blob();
-              const imageUrl = URL.createObjectURL(blob);
-              return imageUrl;
+              const dataUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+              });
+
+              return dataUrl;
             } else {
               console.error("Error fetching the image:", response.statusText);
               return null;

@@ -38,7 +38,7 @@ $sql = "CREATE TABLE IF NOT EXISTS recipes (
     cuisine VARCHAR(100) NOT NULL,
     meal VARCHAR(100) NOT NULL,
     servings INT(11) NOT NULL,
-    image_url BLOB,
+    image_url mediumtext,
     created_by INT(11) UNSIGNED,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     isGenerated BOOLEAN DEFAULT FALSE,
