@@ -2,20 +2,17 @@ let button = document.querySelector(".addBtn");
 let modal = document.querySelector(".modal");
 let form = document.querySelector(".addRecipeForm");
 
-// Show the modal when "Add Recipe" button is clicked
 button.addEventListener("click", (event) => {
   event.preventDefault();
   modal.style.display = "grid";
 });
 
-// Close the modal if the user clicks outside the form
 modal.addEventListener("click", (event) => {
   if (event.target === modal) {
     modal.style.display = "none";
   }
 });
 
-// Handle form submission to submit the recipe
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -36,8 +33,8 @@ form.addEventListener("submit", async (event) => {
 
     if (result.success) {
       alert("Recipe added successfully!");
-      event.target.reset();  // Reset the form inputs
-      fetchUpdatedRecipes(); // Fetch the updated list of recipes
+      event.target.reset();
+      fetchUpdatedRecipes();
     } else {
       alert("Error adding recipe: " + result.message);
     }
@@ -46,10 +43,22 @@ form.addEventListener("submit", async (event) => {
     alert("An error occurred while submitting the recipe: " + error.message);
   }
 });
+const filterItems = document.querySelectorAll(".filters button");
+let selectedFilter = "all";
+let recipesData = [];
 
-// Function to fetch and display updated recipes
+filterItems.forEach((item) => {
+  item.addEventListener("click", (event) => {
+    filterItems.forEach((i) => i.classList.remove("selected"));
+    item.classList.add("selected");
+    selectedFilter = item.dataset.filter;
+    filterAndRenderRecipes(selectedFilter);
+  });
+});
+
+// Fetch all recipes and store them
 async function fetchUpdatedRecipes() {
-  let container = document.querySelector(".container");
+  let container = document.querySelector(".share-recipe-container");
 
   try {
     const response = await fetch("../../utils/fetchAllRecipe.php");
@@ -59,22 +68,106 @@ async function fetchUpdatedRecipes() {
     }
 
     const recipes = await response.json();
-    console.log(recipes);
-
-    container.innerHTML = recipes.data
-      .map(
-        (recipe) => `
-        <div class="recipe-card">
-          <h3>${recipe.title}</h3>
-          <p>${recipe.cuisine} - ${recipe.meal}</p>
-        </div>
-      `
-      )
-      .join("");
+    recipesData = recipes.data;
+    console.log(recipes.data);
+    filterAndRenderRecipes(selectedFilter);
   } catch (error) {
     console.error("Error fetching recipes:", error);
   }
 }
 
-// Periodically fetch updated recipes every 5 seconds
-setInterval(fetchUpdatedRecipes, 5000);
+async function filterAndRenderRecipes(filter) {
+  let filteredRecipes = recipesData;
+
+  if (filter === "veg") {
+    filteredRecipes = recipesData.filter((recipe) => recipe.vegetarian);
+  } else if (filter === "non-veg") {
+    filteredRecipes = recipesData.filter((recipe) => !recipe.vegetarian);
+  } else if (filter === "mine") {
+    const response = await fetch("../../utils/returnUserID.php");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user ID: " + response.statusText);
+    }
+
+    const result = await response.json();
+    const userId = parseInt(result.data,10);
+
+    filteredRecipes = recipesData.filter(
+      (recipe) => recipe.created_by === userId
+    );
+  } else if (filter === "user-generated") {
+    filteredRecipes = recipesData.filter((recipe) => !recipe.isGenerated);
+  }
+
+  renderRecipes(filteredRecipes);
+}
+
+// Render recipes to the page
+function renderRecipes(recipes) {
+  let container = document.querySelector(".share-recipe-container");
+  container.innerHTML = recipes
+    .map(
+      (recipe) => `
+                  <div class="recipe-card">
+                    <div class="left_container">
+                      <h3>${recipe.title}</h3>
+                      <img src="${recipe.image_url}" alt="${
+        recipe.title
+      } image" />
+                      <div class='cuisine_meal_servings'>
+                        <ul>
+                          <li><strong>Cuisine:</strong> ${recipe.cuisine}</li>
+                          <li><strong>Meal:</strong> ${recipe.meal}</li>
+                          <li><strong>Servings:</strong> ${recipe.servings}</li>
+                          <li><strong>${
+                            recipe.vegetarian ? "Vegetarian" : "Non Vegetarian"
+                          }</strong></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="right_container">
+                      <div>
+                        <h4>Ingredients:</h4>
+                        <ul class="ingredients">
+                          ${recipe.ingredients
+                            .map(
+                              (ingredient) => `
+                              <li>${ingredient.quantity} ${ingredient.name}</li>
+                            `
+                            )
+                            .join("")}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4>Steps:</h4>
+                        <ol>
+                          ${recipe.steps
+                            .map(
+                              (step) => `
+                              <li>${step.description}</li>
+                            `
+                            )
+                            .join("")}
+                        </ol>
+                      </div>
+                      <div>
+                        <h4>Tips:</h4>
+                        <ul>
+                          ${recipe.tips
+                            .map(
+                              (tip) => `
+                              <li>${tip.tip}</li>
+                            `
+                            )
+                            .join("")}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                `
+    )
+    .join("");
+}
+
+fetchUpdatedRecipes();

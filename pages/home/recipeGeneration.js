@@ -64,8 +64,9 @@ form.addEventListener("submit", async (event) => {
                 type: "array",
                 items: { type: "string" },
               },
+              vegetarian: { type: "boolean" },
             },
-            required: ["title", "ingredients", "steps"],
+            required: ["title", "ingredients", "steps", "vegetarian"],
           },
         },
       };
@@ -82,7 +83,7 @@ form.addEventListener("submit", async (event) => {
         const data = await response.json();
         const recipeData = JSON.parse(data.candidates[0].content.parts[0].text);
         console.log(recipeData);
-        const { title, ingredients, steps, tips } = recipeData;
+        const { title, ingredients, steps, tips, vegetarian } = recipeData;
 
         const prompt = `${title}`;
         const noLogo = "true";
@@ -124,6 +125,7 @@ form.addEventListener("submit", async (event) => {
             ? `<img src="${imageUrl}" alt="${title} image" />`
             : "<p>No image available</p>"
         }
+        <p>${vegetarian ? "Vegetarian" : "Non Vegetarian"}</p>
         <h3>Ingredients:</h3>
         <ul>${ingredients
           .map((item) => `<li>${item.quantity} ${item.name}</li>`)
@@ -137,6 +139,7 @@ form.addEventListener("submit", async (event) => {
                 .join("")}</ul>`
             : ""
         }
+        
       `;
 
         const result = await fetch("../../utils/insertRecipe.php", {
@@ -150,12 +153,13 @@ form.addEventListener("submit", async (event) => {
             cuisine,
             meal,
             servings,
+            vegetarian,
             image: imageUrl || null,
           }),
         });
 
         const resultData = await result.json();
-        console.log(resultData.message);
+        console.log(resultData);
       } else {
         output.textContent = "Error: Failed to fetch recipe.";
         console.log("Error Status:", response.status);

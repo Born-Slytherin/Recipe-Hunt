@@ -38,10 +38,11 @@ $sql = "CREATE TABLE IF NOT EXISTS recipes (
     cuisine VARCHAR(100) NOT NULL,
     meal VARCHAR(100) NOT NULL,
     servings INT(11) NOT NULL,
-    image_url mediumtext,
+    image_url LONGTEXT,
     created_by INT(11) UNSIGNED,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     isGenerated BOOLEAN DEFAULT FALSE,
+    vegetarian BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (created_by) REFERENCES users(id)
 )";
 
@@ -50,6 +51,7 @@ if ($conn->query($sql) === TRUE) {
 } else {
     echo "<script>console.log('Error creating recipes table: ', $conn->error)</script>";
 }
+
 
 // Create recipe_steps table
 $sql = "CREATE TABLE IF NOT EXISTS recipe_steps (
@@ -97,5 +99,3 @@ if ($conn->query($sql) === TRUE) {
 }
 
 $conn->close();
-
-?>

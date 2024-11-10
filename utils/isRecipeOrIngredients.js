@@ -1,5 +1,5 @@
 export default async function isRecipeOrIngredient(item, geminUrl) {
-  let isRecipePrompt = `Check if ${item} is a "Complete Food" , "Ingredients" or "Non-Food Items". Return message as strings "Complete Food" , "Ingredients" or "Non-Food Items". Return true if "Complete Food" or "Ingredients".Return false if "Non-Food Items"`;
+  let isRecipePrompt = `Identify whether "${item}" is a complete dish that can be served as food, a standalone ingredient used in other dishes, or a non-food item. Respond only with "Complete Food", "Ingredients", or "Non-Food Items". Return success as true for "Complete Food" or "Ingredients", and false for "Non-Food Items".`;
   console.log(isRecipePrompt);
 
   try {
@@ -33,7 +33,7 @@ export default async function isRecipeOrIngredient(item, geminUrl) {
       const result = await response.json();
       const data = result.candidates[0].content.parts[0].text;
       const isRecipeData = JSON.parse(data);
-      console.log("isRecipeData: ",isRecipeData);
+      console.log("isRecipeData: ", isRecipeData);
 
       if (
         isRecipeData.message === "Complete Food" ||

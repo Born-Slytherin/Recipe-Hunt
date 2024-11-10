@@ -69,6 +69,7 @@ div.import-container {
   width: 100%;
   height: 100%;
 }
+
 div.container {
   width: 100%;
   height: 98vh;
@@ -210,6 +211,7 @@ div.output {
 /* Share recipe  */
 
 .addBtn {
+  border: 1px solid #0f0f0f;
   position: fixed;
   bottom: 30px;
   right: 30px;
@@ -217,12 +219,76 @@ div.output {
   width: 60px;
   height: 60px;
   border-radius: 10px;
-  border: none;
   display: grid;
   place-items: center;
 
   & img {
     width: 75%;
     aspect-ratio: 1;
+  }
+}
+div.share-recipe-container {
+  border: 1px solid #0f0f0f;
+  position: relative;
+  padding: 70px 30px;
+  width: 100%;
+  height: 98vh;
+  border-radius: 10px;
+  background: #2f2f2f;
+  overflow-y: auto;
+  display: grid;
+  gap: 15px;
+
+  & .recipe-card {
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    background: #ff8e26;
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    & ul,
+    & ol {
+      list-style-position: inside;
+    }
+    & div.cuisine_meal_servings {
+      & ul {
+        display: flex;
+        justify-content: space-between;
+        list-style-type: none;
+      }
+    }
+
+    & div.left_container {
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      justify-content: space-between;
+    }
+
+    & div.right_container {
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      & ul,
+      & ol {
+        font-size: 14px;
+      }
+
+      & ul.ingredients {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        list-style-position: inside;
+      }
+    }
+
+    & img {
+      width: 100%;
+      aspect-ratio: 4/3;
+    }
   }
 }

@@ -18,6 +18,10 @@ if (!isset($_COOKIE["user"])) {
 require("../../components/modal.php");
 ?>
 
+<?php
+require("../../components/Logout.php");
+?>
+
 <body id="home">
   <div>
     <form method="POST" class="GenerateOrShareForm">

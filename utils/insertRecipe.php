@@ -2,11 +2,27 @@
 require_once("connect.php");
 $conn->select_db("recipe-hunt");
 
+if (!isset($_COOKIE["user"])) {
+    http_response_code(401);
+    echo json_encode(["error" => "User not authenticated."]);
+    exit;
+}
+
 $username = $_COOKIE["user"];
 
-$userQuery = "SELECT `id` FROM `users` WHERE `username` = '$username'";
-$userResult = mysqli_query($conn, $userQuery);
-$userData = mysqli_fetch_assoc($userResult);
+$userQuery = "SELECT `id` FROM `users` WHERE `username` = ?";
+$userStmt = $conn->prepare($userQuery);
+$userStmt->bind_param("s", $username);
+$userStmt->execute();
+$userResult = $userStmt->get_result();
+$userData = $userResult->fetch_assoc();
+
+if (!$userData) {
+    http_response_code(401);
+    echo json_encode(["error" => "Invalid user."]);
+    exit;
+}
+
 $userId = $userData['id'];
 
 $data = file_get_contents("php://input");
@@ -22,56 +38,61 @@ $title = $recipeData['title'];
 $cuisine = $recipeData['cuisine'];
 $meal = $recipeData['meal'];
 $servings = (int)$recipeData['servings'];
-$image = isset($recipeData['image']) ? $recipeData['image'] : null;
+$image = $recipeData['image'];
+$vegetarian = $recipeData['vegetarian'];
 
-// Prepare and execute insert recipe query
-$insertRecipeQuery = "INSERT INTO `recipes` (`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`,`isGenerated`) 
-                      VALUES ('$title', '$cuisine', '$meal', $servings, ".($image ? "'$image'" : "NULL").", $userId , true)";
+$insertRecipeQuery = "INSERT INTO `recipes`(`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`, `isGenerated`, `vegetarian`) VALUES (?, ?, ?, ?, ?, ?,1, ?)";
+$insertRecipeStmt = $conn->prepare($insertRecipeQuery);
+$insertRecipeStmt->bind_param("sssisss", $title, $cuisine, $meal, $servings, $image, $userId, $vegetarian);
 
-if (mysqli_query($conn, $insertRecipeQuery)) {
-    $recipeId = mysqli_insert_id($conn);
+if ($insertRecipeStmt->execute()) {
+    $recipeId = $conn->insert_id;
 
-    // Insert steps into the recipe_steps table
+    // Insert steps
+    $insertStepQuery = "INSERT INTO `recipe_steps` (`recipe_id`, `step_order`, `description`) VALUES (?, ?, ?)";
+    $insertStepStmt = $conn->prepare($insertStepQuery);
+    $insertStepStmt->bind_param("iis", $recipeId, $stepOrder, $step);
+
     foreach ($recipeData['steps'] as $index => $step) {
-        $step = $step;
-        $insertStepQuery = "INSERT INTO `recipe_steps` (`recipe_id`, `step_order`, `description`) 
-                            VALUES ($recipeId, ".($index + 1).", '$step')";
-        mysqli_query($conn, $insertStepQuery);
+        $stepOrder = $index + 1;
+        $insertStepStmt->execute();
     }
 
-    // Insert tips into the recipe_tips table
+    // Insert tips
     if (isset($recipeData['tips']) && is_array($recipeData['tips'])) {
+        $insertTipQuery = "INSERT INTO `recipe_tips` (`recipe_id`, `tip`) VALUES (?, ?)";
+        $insertTipStmt = $conn->prepare($insertTipQuery);
+        $insertTipStmt->bind_param("is", $recipeId, $tip);
+
         foreach ($recipeData['tips'] as $tip) {
-            $tip = $tip;
-            $insertTipQuery = "INSERT INTO `recipe_tips` (`recipe_id`, `tip`) 
-                               VALUES ($recipeId, '$tip')";
-            mysqli_query($conn, $insertTipQuery);
+            $insertTipStmt->execute();
         }
     }
 
-    // Insert ingredients and link to recipe
+    // Insert ingredients
+    $insertIngredientQuery = "INSERT INTO `ingredients` (`name`) VALUES (?) ON DUPLICATE KEY UPDATE `id`=LAST_INSERT_ID(`id`)";
+    $insertIngredientStmt = $conn->prepare($insertIngredientQuery);
+    $insertIngredientStmt->bind_param("s", $ingredientName);
+
+    $linkIngredientQuery = "INSERT INTO `recipe_ingredients` (`recipe_id`, `ingredient_id`, `quantity`) VALUES (?, ?, ?)";
+    $linkIngredientStmt = $conn->prepare($linkIngredientQuery);
+    $linkIngredientStmt->bind_param("iis", $recipeId, $ingredientId, $quantity);
+
     foreach ($recipeData['ingredients'] as $ingredient) {
         $ingredientName = $ingredient['name'];
         $quantity = $ingredient['quantity'];
 
-        // Insert ingredient and link to recipe
-        $insertIngredientQuery = "INSERT INTO `ingredients` (`name`) 
-                                  VALUES ('$ingredientName') 
-                                  ON DUPLICATE KEY UPDATE `id`=LAST_INSERT_ID(`id`)";
-        mysqli_query($conn, $insertIngredientQuery);
-        $ingredientId = mysqli_insert_id($conn);
+        $insertIngredientStmt->execute();
+        $ingredientId = $conn->insert_id;
 
-        $linkIngredientQuery = "INSERT INTO `recipe_ingredients` (`recipe_id`, `ingredient_id`, `quantity`) 
-                                VALUES ($recipeId, $ingredientId, '$quantity')";
-        mysqli_query($conn, $linkIngredientQuery);
+        $linkIngredientStmt->execute();
     }
 
     http_response_code(200);
     echo json_encode(["message" => "Recipe data saved successfully."]);
 } else {
     http_response_code(500);
-    echo json_encode(["error" => "Failed to save recipe.", "details" => mysqli_error($conn)]);
+    echo json_encode(["error" => "Failed to save recipe.", "details" => $conn->error]);
 }
 
-mysqli_close($conn);
-?>
+$conn->close();
