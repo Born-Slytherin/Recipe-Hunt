@@ -16,11 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = mysqli_fetch_assoc($result);
         $hashedPassword = $user['password'];
 
-        // Check if the admin password is stored as plain text
         if ($user['role'] === 'admin') {
-            // If it's plain text, compare directly (not recommended for production)
+
             if ($password === $hashedPassword) {
-                // Set cookie for admin
                 if (!isset($_COOKIE["user"])) {
                     setcookie("user", $username, time() + (86400 * 7), "/");
                 }
@@ -29,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo json_encode(["status" => "error", "message" => "Invalid username or password"]);
             }
         } else {
-            // For non-admin users, use password_verify for hashed passwords
+
             if (password_verify($password, $hashedPassword)) {
                 if (!isset($_COOKIE["user"])) {
                     setcookie("user", $username, time() + (86400 * 7), "/");

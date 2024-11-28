@@ -1,51 +1,89 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
 body {
-    background: #1d1d1d;
-    width: 100vw;
-    height: 100vh;
-    color: white;
+  background: #1d1d1d;
+  width: 100vw;
+  height: 100vh;
+  color: white;
 
-    & header {
+  header {
+    box-sizing: border-box;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 250px;
 
-        padding: 20px;
-        display: grid;
-        grid-template-columns: 1fr 250px;
+    form {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
 
-        & form {
-            display: flex;
-            align-items: center;
-            justify-content: space-evenly;
+      span {
+        font-size: 30px;
+      }
 
-            & span {
-                font-size: 30px;
-            }
+      button {
+        background: #ff8e26;
+        padding: 10px;
+        border-radius: 25px;
+        font-size: 20px;
+        color: white;
+      }
+    }
+  }
 
-            & button {
-                background: #ff8e26;
-                padding: 10px;
-                border-radius: 25px;
-                font-size: 20px;
-                color: white;
-            }
+  main {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    height: calc(100dvh - 90px);
+    padding: 10px 20px;
+    gap: 5px;
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+
+      div {
+        flex-grow: 1;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        background: #ff8e26;
+        font-size: 20px;
+        box-shadow: 0 1px 2px 0 rgba(212, 212, 212, 0.26);
+
+        a {
+          width: 100%;
+          display: block;
+          text-decoration: none;
+          color: white; /* Default text color */
+
+          &:hover {
+            color: #ffd6a0; /* Hover text color */
+          }
         }
-        
+
+        /* Add styles for the selected state */
+        &.selected {
+          background-color: white; /* Highlight background */
+          color: #ff8e26; /* Text color for selected */
+          font-weight: bold;
+
+          a {
+            color: #ff8e26; /* Ensure the link text changes color too */
+          }
+        }
+      }
     }
 
-    & main {
-
-        padding: 30px 0;
-
-        & nav {
-
-            & img {
-
-                width: 50px;
-                aspect-ratio: 1;
-            }
-        }
+    section {
+      width: 100%;
+      box-shadow: 0 1px 2px 0 rgba(212, 212, 212, 0.26);
     }
+  }
 }

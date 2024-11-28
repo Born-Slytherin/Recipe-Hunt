@@ -9,60 +9,75 @@
 </head>
 
 <body>
-    <!-- Routing using PHP -->
-    <?php
-    $user = $_COOKIE['user'] ?? null;
-    if (!$user) {
-        header("Location: ../login/index.php");
-        exit;
-    }
 
-    if (isset($_POST['sign_out'])) {
-        setcookie('user', '', time() - 3600, '/');
-        header("Location: ../login/index.php");
-        exit; // Ensure no further code is executed after redirect
-    }
-    ?>
-
-    <!-- Dynamically setting icons and routes -->
     <?php
     $iconArray = [
         [
-            "icon" => "../../assets/admin/user.svg",
-            "include" => "userManagement.php",
+            "text" => "User Management",
+            "key" => "user_management",
         ],
         [
-            "icon" => "../../assets/admin/envelop.svg",
-            "include" => "AcceptRecipe.php",
+            "text" => "Recipe Management",
+            "key" => "recipe_management",
         ],
         [
-            "icon" => "../../assets/admin/food.svg",
-            "include" => "foodManagement.php"
+            "text" => "Food Management",
+            "key" => "food_management"
         ]
     ];
     ?>
-    
+
+    <?php
+    require("../../components/Logout.php");
+    ?>
+
     <header>
         <img src="../../assets/logo-white.svg" alt="">
-        <form method="POST">
-            <span><?php echo htmlspecialchars($user); ?></span>
-            <button type="submit" name="sign_out">Sign Out</button>
-        </form>
     </header>
 
     <main>
         <nav class="sideNav">
-            <?php 
-                foreach ($iconArray as $item) { // Corrected loop syntax
+            <?php
+
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 'user_management'; 
+
+            foreach ($iconArray as $item) {
+
+                $isSelected = ($item['key'] === $currentPage) ? 'selected' : '';
             ?>
-                <div>
-                    <img src="<?php echo $item['icon']; ?>" alt="">
+                <div class="<?php echo $isSelected; ?>">
+                    <a href="?page=<?php echo $item['key']; ?>">
+                        <span>
+                            <?php echo ($item['text']); ?>
+                        </span>
+                    </a>
                 </div>
-            <?php 
-                } // Close the foreach loop
+            <?php
+            }
             ?>
         </nav>
+
+        <section class="content">
+            <?php
+            switch ($currentPage) {
+                case 'user_management':
+                    include "../../components/UserManagement.php";
+                    break;
+                case 'recipe_management':
+                    include "../../components/RecipeManagement.php";
+                    break;
+                case 'food_management':
+                    include "../../components/FoodManagement.php";
+                    break;
+                default:
+                    echo "<h2>Page not found</h2>";
+                    break;
+            }
+            ?>
+        </section>
     </main>
 </body>
+
+<script src="./main.js" type="module" defer></script>
 
 </html>

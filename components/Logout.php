@@ -1,9 +1,14 @@
 <?php
 $userName = $_COOKIE['user'];
+
+if (!$userName) {
+    header("Location: ../login/index.php");
+    exit;
+}
 ?>
 
 <div class="logout">
-    <span id="userName" onclick="toggleLogoutDiv()">Hi <span style="color: red;"><?php echo $userName ?></span></span>
+    <span id="userName" onclick="toggleLogoutDiv()" style="color: black; text-align:center;">Hi <span style="color: red;"><?php echo $userName ?></span></span>
     <div id="logoutDiv" style="display: none;">
         <div style="width: 100%; height: 1px; background: #00000080"></div>
         <button onclick="logout()" class="logoutBtn">Logout</button>
@@ -19,7 +24,17 @@ $userName = $_COOKIE['user'];
         background: whitesmoke;
         height: max-content;
         border-radius: 10px;
+        padding: 5px;
+        width: 125px;
+        display: flex;
+        flex-direction: column;
+        font-size: 20px;
+    }
 
+    #logoutDiv {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
     }
 
     button.logoutBtn {
@@ -35,7 +50,7 @@ $userName = $_COOKIE['user'];
 <script>
     function toggleLogoutDiv() {
         const logoutDiv = document.getElementById("logoutDiv");
-        logoutDiv.style.display = logoutDiv.style.display === "none" ? "block" : "none";
+        logoutDiv.style.display = logoutDiv.style.display === "none" ? "flex" : "none";
     }
 
     function logout() {
