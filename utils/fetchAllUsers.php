@@ -2,21 +2,28 @@
 require('connect.php');
 $conn->select_db('recipe-hunt');
 
-
 $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
 
 $query = "SELECT * FROM users WHERE role='user'";
 
 if ($searchQuery) {
-    $searchQuery = mysqli_real_escape_string($conn, $searchQuery);
-    $query .= " AND username LIKE '%$searchQuery%'";
+    $searchQuery = "%$searchQuery%";
+    $query .= " AND username LIKE ?";
 }
 
-$result = mysqli_query($conn, $query);
+$stmt = $conn->prepare($query);
+
+if ($searchQuery) {
+    $stmt->bind_param("s", $searchQuery);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
 $users = [];
 
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
         $users[] = $row;
     }
 
@@ -24,3 +31,6 @@ if ($result && mysqli_num_rows($result) > 0) {
 } else {
     echo json_encode(['status' => 404, 'message' => 'No users found.']);
 }
+
+$stmt->close();
+$conn->close();

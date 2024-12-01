@@ -25,7 +25,6 @@ if (!$userName) {
         height: max-content;
         border-radius: 10px;
         padding: 5px;
-        width: 125px;
         display: flex;
         flex-direction: column;
         font-size: 20px;

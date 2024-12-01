@@ -1,6 +1,6 @@
 import isRecipeOrIngredient from "../../utils/isRecipeOrIngredients.js";
 
-const geminiApiKey = "AIzaSyDt5P5wU_GCCllAGLbLVBoz6kTbPHpwDMk";
+const geminiApiKey = "AIzaSyBWshQbOFtItUR75I_QJi_KbJogTTVA2fs";
 const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
 
 let form = document.querySelector(".ingredients-form");

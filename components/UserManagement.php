@@ -1,13 +1,13 @@
 <div class="userManagementContainer">
     <div class="searchBar">
         <input type="text" placeholder="Enter the username" id="searchInput">
-        <div class="searchBtn" onclick="fetchAllUsers()">
+        <!-- <div class="searchBtn" onclick="fetchAllUsers()">
             <img src="../../assets/admin/search.svg" alt="Search Icon">
-        </div>
+        </div> -->
     </div>
 
     <div class="userFetchContainer">
-        <!-- Users will be dynamically populated here -->
+
     </div>
 </div>
 
@@ -22,9 +22,14 @@
 
     div.searchBar {
         display: grid;
-        grid-template-columns: 1fr 50px;
+        /* grid-template-columns: 1fr 50px;
         gap: 5px;
-        padding: 10px;
+        padding: 10px; */
+
+        & input {
+            width: 30%;
+            height: 50px;
+        }
     }
 
     div.searchBar input {
@@ -33,6 +38,7 @@
         border-radius: 50px;
         padding: 10px;
         font-size: 17px;
+        color: white;
     }
 
     div.searchBtn {
@@ -65,6 +71,16 @@
         margin-bottom: 5px;
         border-radius: 5px;
         display: flex;
+        align-items: center;
         justify-content: space-between;
+    }
+
+    button.deleteUserBtn {
+        width: 80px;
+        background: red;
+        color: white;
+        padding: 7px;
+        border: 1px solid white;
+        border-radius: 10px;
     }
 </style>
