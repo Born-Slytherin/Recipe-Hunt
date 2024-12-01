@@ -21,8 +21,8 @@
             "key" => "recipe_management",
         ],
         [
-            "text" => "Food Management",
-            "key" => "food_management"
+            "text" => " Recipe Approval",
+            "key" => "recipe_approval",
         ]
     ];
     ?>
@@ -66,8 +66,8 @@
                 case 'recipe_management':
                     include "../../components/RecipeManagement.php";
                     break;
-                case 'food_management':
-                    include "../../components/FoodManagement.php";
+                case 'recipe_approval':
+                    include "../../components/RecipeApproval.php";
                     break;
                 default:
                     echo "<h2>Page not found</h2>";

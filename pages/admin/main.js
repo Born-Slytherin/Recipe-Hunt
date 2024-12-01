@@ -63,7 +63,7 @@ function deleteUser(userName) {
 }
 
 // **Recipe Management Functions**
-async function fetchAllRecipes() {
+async function fetchAllRecipeForAdmin() {
   const container = document.querySelector(".recipeFetchContainer");
   if (!container) return;
   container.innerHTML = ""; // Clear any previous content
@@ -80,7 +80,7 @@ async function fetchAllRecipes() {
   container.appendChild(headingRow);
 
   try {
-    const response = await fetch("../../utils/fetchAllRecipe.php", {
+    const response = await fetch("../../utils/fetchAllRecipeForAdmin.php", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -92,12 +92,9 @@ async function fetchAllRecipes() {
     }
 
     const data = await response.json();
-    const recipes = data.data;
-    console.log(data);
-    console.log(recipes);
 
     if (data.status == 200) {
-      recipes.forEach((recipe) => {
+      data.recipes.forEach((recipe) => {
         const recipeElement = document.createElement("div");
         recipeElement.classList.add("recipeItem");
 
@@ -154,7 +151,7 @@ function initializePage() {
       fetchAllUsers();
       break;
     case "recipe_management":
-      fetchAllRecipes();
+      fetchAllRecipeForAdmin();
       break;
     case "food_management":
       // Call food management functions here

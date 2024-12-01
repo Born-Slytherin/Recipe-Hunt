@@ -43,6 +43,7 @@ $sql = "CREATE TABLE IF NOT EXISTS recipes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     isGenerated BOOLEAN DEFAULT FALSE,
     vegetarian BOOLEAN DEFAULT FALSE,
+    isApproved BOOLEAN DEFAULT FALSE,   
     FOREIGN KEY (created_by) REFERENCES users(id)
 )";
 

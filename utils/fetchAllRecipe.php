@@ -4,18 +4,20 @@ $conn->select_db('recipe-hunt');
 
 try {
     $query = "
-        SELECT 
-            r.id AS recipe_id, r.title, r.cuisine, r.meal, r.servings, r.image_url, r.created_by, r.created_at, r.isGenerated, r.vegetarian,
-            i.id AS ingredient_id, i.name AS ingredient_name, ri.quantity AS ingredient_quantity,
-            rs.id AS step_id, rs.step_order, rs.description AS step_description,
-            rt.id AS tip_id, rt.tip
-        FROM recipes r
-        LEFT JOIN recipe_ingredients ri ON r.id = ri.recipe_id
-        LEFT JOIN ingredients i ON ri.ingredient_id = i.id
-        LEFT JOIN recipe_steps rs ON r.id = rs.recipe_id
-        LEFT JOIN recipe_tips rt ON r.id = rt.recipe_id
-        ORDER BY r.id, rs.step_order
-    ";
+    SELECT 
+        r.id AS recipe_id, r.title, r.cuisine, r.meal, r.servings, r.image_url, r.created_by, r.created_at, r.isGenerated, r.vegetarian,
+        i.id AS ingredient_id, i.name AS ingredient_name, ri.quantity AS ingredient_quantity,
+        rs.id AS step_id, rs.step_order, rs.description AS step_description,
+        rt.id AS tip_id, rt.tip
+    FROM recipes r
+    LEFT JOIN recipe_ingredients ri ON r.id = ri.recipe_id
+    LEFT JOIN ingredients i ON ri.ingredient_id = i.id
+    LEFT JOIN recipe_steps rs ON r.id = rs.recipe_id
+    LEFT JOIN recipe_tips rt ON r.id = rt.recipe_id
+    WHERE r.isApproved = true
+    ORDER BY r.id, rs.step_order
+";
+
 
     $result = mysqli_query($conn, $query);
 
