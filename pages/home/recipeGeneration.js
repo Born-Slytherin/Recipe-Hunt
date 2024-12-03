@@ -8,17 +8,34 @@ let output = document.querySelector(".output");
 output.innerHTML =
   "<p>Please enter ingredients and submit to generate a recipe.</p>";
 
+var cuisine;
+var meal;
+var servings;
+
+let cuisineSelect = document.querySelector(".cuisine");
+cuisineSelect.addEventListener("change", (event) => {
+  cuisine = event.target.value;
+});
+
+let mealSelect = document.querySelector(".meal");
+
+mealSelect.addEventListener("change", (event) => {
+  meal = event.target.value;
+});
+
+let servingsSelect = document.querySelector(".servings-select");
+
+servingsSelect.addEventListener("change", (event) => {
+  servings = event.target.value;
+});
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   let ingredients = document.getElementById("search_box").value.trim();
-  let cuisine = document.getElementById("cuisine").value.trim();
-  let servings = document.getElementById("servings-select").value.trim();
-  let meal = document.getElementById("meal").value.trim();
   let prompt = "";
 
   let isRecipe = await isRecipeOrIngredient(ingredients, geminiUrl);
-  console.log("isRecipe:", isRecipe);
 
   if (isRecipe.success) {
     if (isRecipe.message === "Complete Food") {
@@ -82,7 +99,6 @@ form.addEventListener("submit", async (event) => {
       if (response.ok) {
         const data = await response.json();
         const recipeData = JSON.parse(data.candidates[0].content.parts[0].text);
-        console.log(recipeData);
         const { title, ingredients, steps, tips, vegetarian } = recipeData;
 
         const prompt = `${title}`;
@@ -159,7 +175,6 @@ form.addEventListener("submit", async (event) => {
         });
 
         const resultData = await result.json();
-        console.log(resultData);
       } else {
         output.textContent = "Error: Failed to fetch recipe.";
         console.log("Error Status:", response.status);

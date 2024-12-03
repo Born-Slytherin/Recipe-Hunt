@@ -1,22 +1,19 @@
 <div class="container">
-    <form action="" class="advanced-features">
+    <div class="advanced-features">
         <div>
             <label for="cuisine">Cuisine</label>
-            <select name="cuisine" id="cuisine">
-                <?php
-                $cuisines = ["Indian", "Italian", "Chinese", "Mexican", "American"];
-                foreach ($cuisines as $cuisine) {
-                    $selected = ($cuisine === "Indian") ? "selected" : "";
-                    echo "<option value='" . $cuisine . "' $selected>" . $cuisine . "</option>";
-                }
-                ?>
-
+            <select name="cuisine" id="cuisine" class="cuisine">
+                <option value="Indian">Indian</option>
+                <option value="Italian">Italian</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Mexican">Mexican</option>
+                <option value="American">American</option>
             </select>
         </div>
         <div>
             <label for="meal">Select Meal</label>
-            <select name="meal" id="meal">
-                <option value="breakfast" selected>Breakfast</option>
+            <select name="meal" id="meal" class="meal">
+                <option value="breakfast" >Breakfast</option>
                 <option value="lunch">Lunch</option>
                 <option value="dinner">Dinner</option>
                 <option value="dessert">Dessert</option>
@@ -24,8 +21,8 @@
         </div>
         <div>
             <label for="servings-select">Servings</label>
-            <select name="servings" id="servings-select">
-                <option value="1" selected>1 Serving</option>
+            <select name="servings" id="servings-select" class="servings-select">
+                <option value="1">1 Serving</option>
                 <option value="2">2 Servings</option>
                 <option value="3">3 Servings</option>
                 <option value="4">4 Servings</option>
@@ -37,7 +34,7 @@
                 <option value="10">10 Servings</option>
             </select>
         </div>
-    </form>
+    </div>
     <div class="chat_box">
         <div class="output"></div>
         <div class="search_btn">

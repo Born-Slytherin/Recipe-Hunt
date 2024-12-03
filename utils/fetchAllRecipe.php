@@ -14,10 +14,9 @@ try {
     LEFT JOIN ingredients i ON ri.ingredient_id = i.id
     LEFT JOIN recipe_steps rs ON r.id = rs.recipe_id
     LEFT JOIN recipe_tips rt ON r.id = rt.recipe_id
-    WHERE r.isApproved = true
+    WHERE r.isApproved = TRUE
     ORDER BY r.id, rs.step_order
 ";
-
 
     $result = mysqli_query($conn, $query);
 
@@ -42,14 +41,14 @@ try {
             $recipes[$recipe_id] = [
                 'id' => (int)$row['recipe_id'],
                 'title' => $row['title'],
-                'vegetarian' => (bool)$row['vegetarian'],  // Convert to boolean
+                'vegetarian' => (bool)$row['vegetarian'],
                 'cuisine' => $row['cuisine'],
                 'meal' => $row['meal'],
-                'servings' => (int)$row['servings'],  // Ensure servings is an integer
+                'servings' => (int)$row['servings'],
                 'image_url' => $image_base64,
-                'created_by' => (int)$row['created_by'],  // Ensure created_by is an integer
+                'created_by' => (int)$row['created_by'],
                 'created_at' => $row['created_at'],
-                'isGenerated' => (bool)$row['isGenerated'],  // Convert to boolean
+                'isGenerated' => (bool)$row['isGenerated'],
                 'ingredients' => [],
                 'steps' => [],
                 'tips' => []
@@ -59,7 +58,7 @@ try {
         // Add unique ingredient
         if ($row['ingredient_id'] && !isset($recipes[$recipe_id]['ingredients'][$row['ingredient_id']])) {
             $recipes[$recipe_id]['ingredients'][$row['ingredient_id']] = [
-                'id' => (int)$row['ingredient_id'],  // Ensure ingredient_id is an integer
+                'id' => (int)$row['ingredient_id'],
                 'name' => $row['ingredient_name'],
                 'quantity' => $row['ingredient_quantity']
             ];
@@ -68,8 +67,8 @@ try {
         // Add unique step
         if ($row['step_id'] && !isset($recipes[$recipe_id]['steps'][$row['step_id']])) {
             $recipes[$recipe_id]['steps'][$row['step_id']] = [
-                'id' => (int)$row['step_id'],  // Ensure step_id is an integer
-                'order' => (int)$row['step_order'],  // Ensure step_order is an integer
+                'id' => (int)$row['step_id'],
+                'order' => (int)$row['step_order'],
                 'description' => $row['step_description']
             ];
         }
@@ -77,26 +76,35 @@ try {
         // Add unique tip
         if ($row['tip_id'] && !isset($recipes[$recipe_id]['tips'][$row['tip_id']])) {
             $recipes[$recipe_id]['tips'][$row['tip_id']] = [
-                'id' => (int)$row['tip_id'],  // Ensure tip_id is an integer
+                'id' => (int)$row['tip_id'],
                 'tip' => $row['tip']
             ];
         }
     }
 
-    // Convert associative arrays to indexed arrays for JSON encoding
-    foreach ($recipes as &$recipe) {
-        $recipe['ingredients'] = array_values($recipe['ingredients']);
-        $recipe['steps'] = array_values($recipe['steps']);
-        $recipe['tips'] = array_values($recipe['tips']);
-    }
-    unset($recipe);
+    // If no recipes are found, return an empty array
+    if (empty($recipes)) {
+        echo json_encode([
+            "status" => 200,
+            "message" => "No approved recipes found",
+            "data" => []
+        ]);
+    } else {
+        // Convert associative arrays to indexed arrays for JSON encoding
+        foreach ($recipes as &$recipe) {
+            $recipe['ingredients'] = array_values($recipe['ingredients']);
+            $recipe['steps'] = array_values($recipe['steps']);
+            $recipe['tips'] = array_values($recipe['tips']);
+        }
+        unset($recipe);
 
-    // Send the response as JSON
-    echo json_encode([
-        "status" => 200,
-        "message" => "Recipes fetched successfully",
-        "data" => array_values($recipes)
-    ]);
+        // Send the response as JSON
+        echo json_encode([
+            "status" => 200,
+            "message" => "Recipes fetched successfully",
+            "data" => array_values($recipes)
+        ]);
+    }
 } catch (Exception $e) {
     echo json_encode([
         "status" => 404,

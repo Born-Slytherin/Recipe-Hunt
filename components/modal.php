@@ -1,5 +1,5 @@
 <div class="modal">
-    <form method="post" class="addRecipeForm" id="addRecipeForm" enctype="multipart/form-data" >
+    <form method="post" class="addRecipeForm" id="addRecipeForm" enctype="multipart/form-data">
         <div class="addRecipeContainer">
             <!-- Thumbnail Image -->
             <div class="image">
@@ -56,6 +56,21 @@
                 <?php
                 require("TipsInput.php");
                 ?>
+
+                <div class="dietContainer">
+                    <label>Diet:</label>
+                    <div class="dietFlex">
+                        <div>
+                            <input type="radio" id="vegetarian" name="diet" value="true" checked>
+                            <label for="vegetarian">Vegetarian</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="non-vegetarian" name="diet" value="false">
+                            <label for="non-vegetarian">Non-Vegetarian</label>
+                        </div>
+                    </div>
+                </div>
+
 
                 <button type="submit" class="add-recipe">Add Recipe</button>
             </div>
@@ -139,6 +154,7 @@
                         border-bottom: 2px solid #ff8e26;
                         background: transparent;
                         font-size: 24px;
+                        color: #fff;
                     }
 
                     & div.cuisineMealRecipe {
@@ -167,6 +183,7 @@
                                 border: none;
                                 border-bottom: 2px solid #ff8e26;
                                 font-size: 15px;
+                                color: #fff;
 
                                 & option {
                                     background: #ff8e26;
@@ -187,6 +204,21 @@
                     font-weight: bold;
                 }
             }
+        }
+    }
+
+    div.dietContainer {
+
+        margin-top: 10px;
+
+        & label {
+            font-weight: bold;
+        }
+
+        & div.dietFlex {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
         }
     }
 </style>

@@ -1,9 +1,6 @@
 <div class="userManagementContainer">
     <div class="searchBar">
-        <input type="text" placeholder="Enter the username" id="searchInput">
-        <!-- <div class="searchBtn" onclick="fetchAllUsers()">
-            <img src="../../assets/admin/search.svg" alt="Search Icon">
-        </div> -->
+        <input type="text" id="searchInput" placeholder="Search users...">
     </div>
 
     <div class="userFetchContainer">

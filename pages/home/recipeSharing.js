@@ -17,6 +17,7 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(event.target);
+  console.log("formData", formData);
 
   try {
     const response = await fetch("../../utils/submitRecipe.php", {
@@ -28,7 +29,7 @@ form.addEventListener("submit", async (event) => {
       throw new Error("Network response was not ok " + response.statusText);
     }
 
-    const result = await response.json();
+    const result = await response.text();
     console.log("result:", result);
 
     if (result.success) {
@@ -69,7 +70,6 @@ async function fetchUpdatedRecipes() {
 
     const recipes = await response.json();
     recipesData = recipes.data;
-    console.log(recipes.data);
     filterAndRenderRecipes(selectedFilter);
   } catch (error) {
     console.error("Error fetching recipes:", error);
@@ -91,7 +91,7 @@ async function filterAndRenderRecipes(filter) {
     }
 
     const result = await response.json();
-    const userId = parseInt(result.data,10);
+    const userId = parseInt(result.data, 10);
 
     filteredRecipes = recipesData.filter(
       (recipe) => recipe.created_by === userId

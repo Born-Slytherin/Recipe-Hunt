@@ -79,7 +79,7 @@ div.container {
   background: #2f2f2f;
 }
 
-form.advanced-features {
+div.advanced-features {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -238,6 +238,10 @@ div.share-recipe-container {
   overflow-y: auto;
   display: grid;
   gap: 15px;
+
+  p {
+    color: white;
+  }
 
   & .recipe-card {
     border-radius: 10px;

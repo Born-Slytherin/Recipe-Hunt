@@ -3,42 +3,102 @@ const urlParams = new URLSearchParams(window.location.search);
 const currentPage = urlParams.get("page") || "user_management";
 
 // **User Management Functions**
-function fetchAllUsers() {
-  const searchQuery = document.getElementById("searchInput")?.value;
-  const url =
-    "../../utils/fetchAllUsers.php?search=" + encodeURIComponent(searchQuery);
+function initializeUserManagement() {
+  let searchInput = document.querySelector("#searchInput");
+  const container = document.querySelector(".userFetchContainer");
 
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      const container = document.querySelector(".userFetchContainer");
-      container.innerHTML = ""; // Clear previous results
+  // Function to fetch users
+  const fetchUsers = () => {
+    const url = "../../utils/fetchAllUsers.php";
 
-      if (data.status === 200 && data.users.length > 0) {
-        data.users.forEach((user) => {
-          const userElement = document.createElement("div");
-          userElement.classList.add("userItem");
-          userElement.innerHTML = `
-                        <span>${user.username}</span>
-                        <span>${user.email}</span>
-                        <button class='deleteUserBtn' data-username='${user.username}'>delete</button>
-                    `;
-          container.appendChild(userElement);
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        container.innerHTML = ""; // Clear previous results
+
+        if (data.status === 200 && data.users.length > 0) {
+          // Display users
+          data.users.forEach((user) => {
+            const userElement = document.createElement("div");
+            userElement.classList.add("userItem");
+            userElement.innerHTML = `
+              <span>${user.username}</span>
+              <span>${user.email}</span>
+              <button class='deleteUserBtn' data-username='${user.username}'>delete</button>
+            `;
+            container.appendChild(userElement);
+          });
+
+          // Attach delete event listeners
+          const deleteButtons = document.querySelectorAll(".deleteUserBtn");
+          deleteButtons.forEach((btn) => {
+            btn.addEventListener("click", () =>
+              deleteUser(btn.dataset.username)
+            );
+          });
+        } else {
+          container.innerHTML = "<p>No users found</p>";
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  };
+
+  // Fetch users initially
+  fetchUsers();
+
+  // Event listener for 'input' event to filter users
+  if (searchInput) {
+    searchInput.addEventListener("input", function (event) {
+      const searchQuery = event.target.value.toLowerCase(); // Get the value from the input field
+      const url = "../../utils/fetchAllUsers.php";
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          container.innerHTML = ""; // Clear previous results
+
+          if (data.status === 200 && data.users.length > 0) {
+            // Filter users based on search query
+            const filteredUsers = data.users.filter((user) => {
+              return (
+                user.username.toLowerCase().includes(searchQuery) ||
+                user.email.toLowerCase().includes(searchQuery)
+              );
+            });
+
+            if (filteredUsers.length > 0) {
+              filteredUsers.forEach((user) => {
+                const userElement = document.createElement("div");
+                userElement.classList.add("userItem");
+                userElement.innerHTML = ` 
+                  <span>${user.username}</span>
+                  <span>${user.email}</span>
+                  <button class='deleteUserBtn' data-username='${user.username}'>delete</button>
+                `;
+                container.appendChild(userElement);
+              });
+
+              const deleteButtons = document.querySelectorAll(".deleteUserBtn");
+              deleteButtons.forEach((btn) => {
+                btn.addEventListener("click", () =>
+                  deleteUser(btn.dataset.username)
+                );
+              });
+            } else {
+              container.innerHTML = "<p>No users found</p>";
+            }
+          } else {
+            container.innerHTML = "<p>No users found</p>";
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
         });
-
-        const deleteButtons = document.querySelectorAll(".deleteUserBtn");
-        deleteButtons.forEach((btn) => {
-          btn.addEventListener("click", () => deleteUser(btn.dataset.username));
-        });
-      } else {
-        container.innerHTML = "<p>No users found</p>";
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching users:", error);
     });
+  }
 }
-
 
 function deleteUser(userName) {
   fetch("../../utils/deleteUser.php", {
@@ -63,7 +123,7 @@ function deleteUser(userName) {
 }
 
 // **Recipe Management Functions**
-async function fetchAllRecipeForAdmin() {
+async function fetchAllRecipe() {
   const container = document.querySelector(".recipeFetchContainer");
   if (!container) return;
   container.innerHTML = ""; // Clear any previous content
@@ -80,40 +140,40 @@ async function fetchAllRecipeForAdmin() {
   container.appendChild(headingRow);
 
   try {
-    const response = await fetch("../../utils/fetchAllRecipeForAdmin.php", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch("../../utils/fetchAllRecipe.php"); // Await the fetch response
+    const data = await response.json();
+    console.log("data: " + JSON.stringify(data));
 
     if (!response.ok) {
       throw new Error(`Failed to fetch recipes: ${response.statusText}`);
     }
 
-    const data = await response.json();
-
     if (data.status == 200) {
-      data.recipes.forEach((recipe) => {
-        const recipeElement = document.createElement("div");
-        recipeElement.classList.add("recipeItem");
+      if (data.data.length > 0) {
+        data.data.forEach((recipe) => {
+          const recipeElement = document.createElement("div");
+          recipeElement.classList.add("recipeItem");
 
-        recipeElement.innerHTML = `
-          <span>${recipe.id}</span>
-          <span>${recipe.title}</span>
-          <span>${recipe.created_by}</span>
-          <button class="deleteRecipeBtn" data-id="${recipe.id}">Delete</button>
-        `;
+          recipeElement.innerHTML = `
+            <span>${recipe.id}</span>
+            <span>${recipe.title}</span>
+            <span>${recipe.created_by}</span>
+            <button class="deleteRecipeBtn" data-id="${recipe.id}">Delete</button>
+          `;
 
-        container.appendChild(recipeElement);
-      });
+          container.appendChild(recipeElement);
+        });
 
-      // Attach delete event listeners
-      document.querySelectorAll(".deleteRecipeBtn").forEach((btn) => {
-        btn.addEventListener("click", () => deleteRecipe(btn.dataset.id));
-      });
+        // Attach delete event listeners
+        document.querySelectorAll(".deleteRecipeBtn").forEach((btn) => {
+          btn.addEventListener("click", () => deleteRecipe(btn.dataset.id));
+        });
+      } else {
+        container.innerHTML = "<p>No recipes found</p>";
+      }
     } else {
-      container.innerHTML = "<p>No recipes found</p>";
+      container.innerHTML =
+        "<p>Error fetching recipes: " + data.message + "</p>";
     }
   } catch (error) {
     console.error("Error fetching recipes:", error);
@@ -135,7 +195,7 @@ async function deleteRecipe(recipeId) {
 
     if (data.status === 200) {
       alert(data.message);
-      fetchAllRecipes();
+      fetchAllRecipe();
     } else {
       alert(data.message || "Failed to delete recipe");
     }
@@ -145,16 +205,22 @@ async function deleteRecipe(recipeId) {
   }
 }
 
+// **Recipe Approval Functions**
+// Placeholder for food management functions
+function fetchAllFoodsForAdmin() {
+  // Implement food management functionality here if needed
+}
+
 function initializePage() {
   switch (currentPage) {
     case "user_management":
-      fetchAllUsers();
+      initializeUserManagement(); // Initialize user management functionalities
       break;
     case "recipe_management":
-      fetchAllRecipeForAdmin();
+      fetchAllRecipe();
       break;
-    case "food_management":
-      // Call food management functions here
+    case "recipe_approval":
+      fetchAllFoodsForAdmin(); // Call food management functions here
       break;
     default:
       console.error("Unknown page:", currentPage);

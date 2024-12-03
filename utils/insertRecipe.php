@@ -41,7 +41,7 @@ $servings = (int)$recipeData['servings'];
 $image = $recipeData['image'];
 $vegetarian = $recipeData['vegetarian'];
 
-$insertRecipeQuery = "INSERT INTO `recipes`(`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`, `isGenerated`, `vegetarian`) VALUES (?, ?, ?, ?, ?, ?,1, ?)";
+$insertRecipeQuery = "INSERT INTO `recipes`(`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`, `isGenerated`, `vegetarian`,`isApproved`) VALUES (?, ?, ?, ?, ?, ?,1, ?,1)";
 $insertRecipeStmt = $conn->prepare($insertRecipeQuery);
 $insertRecipeStmt->bind_param("sssisss", $title, $cuisine, $meal, $servings, $image, $userId, $vegetarian);
 

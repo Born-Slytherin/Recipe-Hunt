@@ -34,6 +34,7 @@
                 border: none;
                 border-bottom: 1px solid #ff8e26;
                 font-size: 15px;
+                color: white;
             }
 
             .add-step,
