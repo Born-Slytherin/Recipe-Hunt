@@ -39,9 +39,10 @@ $cuisine = $recipeData['cuisine'];
 $meal = $recipeData['meal'];
 $servings = (int)$recipeData['servings'];
 $image = $recipeData['image'];
-$vegetarian = $recipeData['vegetarian'];
+$vegetarian = (int)$recipeData['vegetarian'];
 
-$insertRecipeQuery = "INSERT INTO `recipes`(`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`, `isGenerated`, `vegetarian`,`isApproved`) VALUES (?, ?, ?, ?, ?, ?,1, ?,1)";
+// Insert Recipe
+$insertRecipeQuery = "INSERT INTO `recipes`(`title`, `cuisine`, `meal`, `servings`, `image_url`, `created_by`, `isGenerated`, `vegetarian`, `isApproved`) VALUES (?, ?, ?, ?, ?, ?, 1, ?, 0)";
 $insertRecipeStmt = $conn->prepare($insertRecipeQuery);
 $insertRecipeStmt->bind_param("sssisss", $title, $cuisine, $meal, $servings, $image, $userId, $vegetarian);
 
@@ -49,13 +50,15 @@ if ($insertRecipeStmt->execute()) {
     $recipeId = $conn->insert_id;
 
     // Insert steps
-    $insertStepQuery = "INSERT INTO `recipe_steps` (`recipe_id`, `step_order`, `description`) VALUES (?, ?, ?)";
-    $insertStepStmt = $conn->prepare($insertStepQuery);
-    $insertStepStmt->bind_param("iis", $recipeId, $stepOrder, $step);
+    if (isset($recipeData['steps']) && is_array($recipeData['steps'])) {
+        $insertStepQuery = "INSERT INTO `recipe_steps` (`recipe_id`, `step_order`, `description`) VALUES (?, ?, ?)";
+        $insertStepStmt = $conn->prepare($insertStepQuery);
+        $insertStepStmt->bind_param("iis", $recipeId, $stepOrder, $step);
 
-    foreach ($recipeData['steps'] as $index => $step) {
-        $stepOrder = $index + 1;
-        $insertStepStmt->execute();
+        foreach ($recipeData['steps'] as $index => $step) {
+            $stepOrder = $index + 1;
+            $insertStepStmt->execute();
+        }
     }
 
     // Insert tips
@@ -70,22 +73,28 @@ if ($insertRecipeStmt->execute()) {
     }
 
     // Insert ingredients
-    $insertIngredientQuery = "INSERT INTO `ingredients` (`name`) VALUES (?) ON DUPLICATE KEY UPDATE `id`=LAST_INSERT_ID(`id`)";
-    $insertIngredientStmt = $conn->prepare($insertIngredientQuery);
-    $insertIngredientStmt->bind_param("s", $ingredientName);
+    if (isset($recipeData['ingredients']) && is_array($recipeData['ingredients'])) {
+        $insertIngredientQuery = "INSERT INTO `ingredients` (`name`) VALUES (?) ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id`)";
+        $insertIngredientStmt = $conn->prepare($insertIngredientQuery);
+        $insertIngredientStmt->bind_param("s", $ingredientName);
 
-    $linkIngredientQuery = "INSERT INTO `recipe_ingredients` (`recipe_id`, `ingredient_id`, `quantity`) VALUES (?, ?, ?)";
-    $linkIngredientStmt = $conn->prepare($linkIngredientQuery);
-    $linkIngredientStmt->bind_param("iis", $recipeId, $ingredientId, $quantity);
+        $linkIngredientQuery = "INSERT INTO `recipe_ingredients` (`recipe_id`, `ingredient_id`, `quantity`) VALUES (?, ?, ?)";
+        $linkIngredientStmt = $conn->prepare($linkIngredientQuery);
+        $linkIngredientStmt->bind_param("iis", $recipeId, $ingredientId, $quantity);
 
-    foreach ($recipeData['ingredients'] as $ingredient) {
-        $ingredientName = $ingredient['name'];
-        $quantity = $ingredient['quantity'];
+        foreach ($recipeData['ingredients'] as $ingredient) {
+            $ingredientName = $ingredient['name'];
+            $quantity = $ingredient['quantity'];
 
-        $insertIngredientStmt->execute();
-        $ingredientId = $conn->insert_id;
+            // Insert the ingredient
+            $insertIngredientStmt->execute();
 
-        $linkIngredientStmt->execute();
+            // Get the inserted ingredient id
+            $ingredientId = $conn->insert_id;
+
+            // Link ingredient with recipe
+            $linkIngredientStmt->execute();
+        }
     }
 
     http_response_code(200);
@@ -96,3 +105,4 @@ if ($insertRecipeStmt->execute()) {
 }
 
 $conn->close();
+?>

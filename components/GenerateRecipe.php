@@ -1,4 +1,4 @@
-<div class="container">
+<div class="generate-recipe-container">
     <div class="advanced-features">
         <div>
             <label for="cuisine">Cuisine</label>

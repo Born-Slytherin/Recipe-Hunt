@@ -1,4 +1,4 @@
-export default async function isRecipeOrIngredient(item, geminUrl) {
+export  async function isRecipeOrIngredient(item, geminUrl) {
   let isRecipePrompt = `Identify whether "${item}" is a complete dish that can be served as food, a standalone ingredient used in other dishes, or a non-food item. Respond only with "Complete Food", "Ingredients", or "Non-Food Items". Return success as true for "Complete Food" or "Ingredients", and false for "Non-Food Items".`;
 
   try {
