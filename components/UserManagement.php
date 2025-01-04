@@ -67,13 +67,16 @@
         padding: 10px;
         margin-bottom: 5px;
         border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 100px 1fr 100px;
+
+        & span {
+            text-align: center;
+        }
     }
 
     button.deleteUserBtn {
-        width: 80px;
+        width: 100%;
         background: red;
         color: white;
         padding: 7px;
