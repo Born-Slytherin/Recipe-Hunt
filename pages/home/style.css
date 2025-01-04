@@ -109,6 +109,7 @@ div.advanced-features {
   }
 }
 div.chat_box {
+  width: 100%;
   border-left: 1px solid #4f4f4f;
   display: grid;
   height: 98vh;

@@ -33,7 +33,7 @@ if (document.querySelector(".share-recipe-container")) {
         throw new Error("Network response was not ok " + response.statusText);
       }
 
-      const result = await response.text();
+      const result = await response.json();
       console.log("result:", result);
 
       if (result.success) {

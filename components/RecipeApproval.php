@@ -2,19 +2,17 @@
 require_once("../../utils/connect.php");
 $conn->select_db('recipe-hunt');
 
-// Fetch unapproved recipes along with the user details
 $query = "SELECT recipes.*, users.username AS username, users.email AS user_email
           FROM recipes
           JOIN users ON recipes.created_by = users.id
-          WHERE recipes.isApproved = false";
-
+          WHERE recipes.isApproved = 0";
 $result = mysqli_query($conn, $query);
 
 $recipes = [];
 
 if ($result && mysqli_num_rows($result) > 0) {
     while ($recipe = mysqli_fetch_assoc($result)) {
-        // Get ingredients for each recipe
+
         $recipeId = $recipe['id'];
         $ingredientsQuery = "SELECT ingredients.name, recipe_ingredients.quantity
                              FROM ingredients
@@ -26,7 +24,6 @@ if ($result && mysqli_num_rows($result) > 0) {
             $ingredients[] = $ingredient;
         }
 
-        // Get steps for each recipe
         $stepsQuery = "SELECT step_order, description FROM recipe_steps WHERE recipe_id = $recipeId ORDER BY step_order";
         $stepsResult = mysqli_query($conn, $stepsQuery);
         $steps = [];
@@ -34,7 +31,6 @@ if ($result && mysqli_num_rows($result) > 0) {
             $steps[] = $step;
         }
 
-        // Get tips for each recipe
         $tipsQuery = "SELECT tip FROM recipe_tips WHERE recipe_id = $recipeId";
         $tipsResult = mysqli_query($conn, $tipsQuery);
         $tips = [];
@@ -42,24 +38,21 @@ if ($result && mysqli_num_rows($result) > 0) {
             $tips[] = $tip;
         }
 
-        // Add the recipe data with related ingredients, steps, and tips
         $recipe['ingredients'] = $ingredients;
         $recipe['steps'] = $steps;
         $recipe['tips'] = $tips;
 
-        // Add the recipe to the list of recipes
         $recipes[] = $recipe;
     }
 }
 
 // Approve recipe
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['approve_id'])) {
-    $approveId = $_POST['approve_id'];
+    $approveId = intval($_POST['approve_id']); // Ensure the ID is an integer
 
-    // Update the 'isApproved' field in the database
-    $approveQuery = "UPDATE recipes SET isApproved = true WHERE id = $approveId";
+    $approveQuery = "UPDATE recipes SET isApproved = 1 WHERE id = $approveId";
     if (mysqli_query($conn, $approveQuery)) {
-        // Redirect to the same page (index.php with page=recipe_approval)
+    
         header("Location: index.php?page=recipe_approval");
         exit();
     } else {
@@ -70,12 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['approve_id'])) {
 $conn->close();
 ?>
 
+
 <div class="recipeApprovalContainer">
-    <?php 
-    // Check if there are any recipes to display
+    <?php
+  
     if (!empty($recipes)) {
         foreach ($recipes as $recipe) {
-            // Display each recipe in the container
+           
             echo "<form method='POST' class='recipeItem'>";
             echo '<h3>' . htmlspecialchars($recipe['title']) . '</h3>';
             echo '<p><strong>Submitted by:</strong> ' . htmlspecialchars($recipe['username']) . ' (' . htmlspecialchars($recipe['user_email']) . ')</p>';
@@ -97,7 +91,7 @@ $conn->close();
             }
             echo '</ul>';
 
-            // Hidden field to pass the recipe ID
+           
             echo '<input type="hidden" name="approve_id" value="' . $recipe['id'] . '">';
             echo '<button type="submit" class="approveButton">Approve</button>';
             echo '</form>';
@@ -119,6 +113,7 @@ $conn->close();
         color: #555;
         padding: 20px;
     }
+
     .recipeItem {
         width: 100%;
         background-color: #fff;
@@ -128,9 +123,11 @@ $conn->close();
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
     }
+
     .recipeItem:hover {
         transform: translateY(-5px);
     }
+
     .approveButton {
         margin-top: 10px;
         padding: 8px 16px;
@@ -140,6 +137,7 @@ $conn->close();
         border-radius: 4px;
         cursor: pointer;
     }
+
     .approveButton:hover {
         background-color: #45a049;
     }
