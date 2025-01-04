@@ -53,6 +53,6 @@
         color: white;
         padding: 7px;
         border: 1px solid white;
-        border-radius: 10px;
+        border-radius: 5px;
     }
 </style>
