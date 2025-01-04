@@ -155,7 +155,7 @@ async function fetchAllRecipe() {
           recipeElement.classList.add("recipeItem");
 
           recipeElement.innerHTML = `
-            <span>${recipe.id}</span>
+            <span class="">${recipe.id}</span>
             <span>${recipe.title}</span>
             <span>${recipe.created_by}</span>
             <button class="deleteRecipeBtn" data-id="${recipe.id}">Delete</button>

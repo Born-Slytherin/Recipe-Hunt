@@ -14,14 +14,20 @@
     }
 
     .headingRow {
-        background: #ff8e26;
         color: white;
+        border: 1px solid #676767;
         padding: 10px;
         margin-bottom: 5px;
         border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        display: grid;
+        grid-template-columns: 50px 1fr 1fr 100px;
+
+        & span {
+            text-align: center;
+        }
     }
 
     .recipeItem {
@@ -32,10 +38,17 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        display: grid;
+        grid-template-columns: 50px 1fr 1fr 100px;
+        place-content: center;
+
+        & span {
+            text-align: center;
+        }
     }
 
     .deleteRecipeBtn {
-        width: 80px;
+        width: 100%;
         background: red;
         color: white;
         padding: 7px;

@@ -1,5 +1,7 @@
 // recipeSharing.js
 
+import { showToast } from "../../components/toast.js";
+
 // Check if we're on the recipe sharing page by looking for the container div
 if (document.querySelector(".share-recipe-container")) {
   let button = document.querySelector(".addBtn");
@@ -37,15 +39,18 @@ if (document.querySelector(".share-recipe-container")) {
       console.log("result:", result);
 
       if (result.success) {
-        alert("Recipe added successfully!");
+        showToast("Recipe added successfully!", "success");
         event.target.reset();
         fetchUpdatedRecipes();
       } else {
-        alert("Error adding recipe: " + result.message);
+        showToast("Error adding recipe: " + result.message, "error");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while submitting the recipe: " + error.message);
+      showToast(
+        "An error occurred while submitting the recipe: " + error.message,
+        "error"
+      );
     }
   });
 
